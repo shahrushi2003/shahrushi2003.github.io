@@ -1,0 +1,128 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html",
+    "href": "posts/probability_refresher/index.html",
+    "title": "An Expansive Probability Refresher",
+    "section": "",
+    "text": "Many students study probability in high school or college but fail to grasp the common-sensical understanding of this natural topic. They usually end up memorising a ton of formulae and applying them to a hundred questions. I don’t know about them, but probability surely deserves better! I will explain everything in granular detail, providing informal, simple explanations alongside formal definitions of various terms and concepts. So, without further ado, let’s start!"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#what-is-a-random-variable",
+    "href": "posts/probability_refresher/index.html#what-is-a-random-variable",
+    "title": "An Expansive Probability Refresher",
+    "section": "What is a random variable?",
+    "text": "What is a random variable?\nIt’s just a function that maps an event’s textual description to a relevant number. For example, if we toss a coin, a random variable \\(X\\) can be defined as follows:\n\\[X(heads) = 1\\]\nNow, let’s toss two coins and define \\(X\\) to denote the number of heads as shown below:\n\\[X(TT) = 0\\]\nSo, apparently, the only reason random variables exist is that our X-axis can’t fit words :))! Quite some existential crisis, isn’t it?"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#what-exactly-is-probability",
+    "href": "posts/probability_refresher/index.html#what-exactly-is-probability",
+    "title": "An Expansive Probability Refresher",
+    "section": "What exactly is probability?",
+    "text": "What exactly is probability?\nLet’s start with the most basic definition of probability. \\[probability = \\frac {number \\, of \\, favourable \\, outcomes}{total \\, number \\, of \\, possible \\, outcomes}\\] This can be applied to the simple example of a coin toss using the random variable \\(X\\)as shown above, as follows: \\[prob(X=1) = \\frac {1} {2} \\, ; \\, prob(X=0) = \\frac {1} {2}\\] However, this definition has two significant limitations :(!\n\nThe EQ Problem!\nOur definition works well for the unbiased coin toss example. But, let’s take a biased coin with heads on both sides(like the one shown in the movie “Sholay”!). According to our formula: \\[prob(X=1) = \\frac {num \\, outcomes \\, having \\, heads} {total \\, number \\, of \\, outcomes} = \\frac {1}{2}\\] However, in reality, \\(prob(X=1) = 1\\). Hence, our definition does not work when all outcomes are not EQually likely. In such cases, we conduct experiments and note down the outcomes. This gives us the evidence to support our probability values. Hence, the new definition of probability becomes: \\[prob(X=\\lambda) = \\lim\\limits_{n_{total} \\rightarrow \\infty} \\frac {n_\\lambda} {n_{total}}\\] Let’s understand this with the typical example of a coin toss. Suppose we are dumb and don’t know that \\(prob(heads) = 0.5\\). However, we are not too dumb, so we decided to do ten coin tosses and observe. We get three heads and seven tails. So, we define \\(prob(heads) = 0.3\\). Now, a moderately clever (but idle!) person says, “Let’s do it 1000 times!”. This time, we get 550 heads and 450 tails. Now, \\(prob(heads)\\) becomes \\(0.55\\). As you can notice, as we increase the number of tosses, our probabilities get closer and closer to the correct answer. This is the logic behind the \\(n_{total} \\rightarrow \\infty\\) limit in the above formula.\n\n\nThe Infinity Problem\nIt only works when the total number of possible outcomes is finite. This is a big problem because it is not the case in most practical scenarios. For example, what can we do if we want to find the value of \\(prob(temp \\in [17.29^{\\circ}C, 20^{\\circ}C])\\) in a room?\nCurrently, we are viewing probability as just discrete values assigned to a finite number of events. However, think about it and tell me if going around assigning probabilities to each and every point on the x-axis is a good option or not. Of course, it’s foolish. Let’s try peeking through the lens of calculus. One of the main lessons of calculus was to “think in terms of ranges rather than points”. Okay, so we make a graph where the x-axis contains the infinite range of values available to us while the y-axis contains \\(prob(X \\le x)\\). Let’s name this function of this graph as \\(cprob\\). Hence, rather than focussing on \\(prob(X=x)\\), we focus on \\(prob(X \\le x)\\). This way, the problem is solved because: \\[\\small \\begin{equation*} \\begin{split} prob(temp \\in [17.29^{\\circ}C, 20^{\\circ}C]) &= prob(temp \\le 20^{\\circ}C) - prob(temp \\le 17.29^{\\circ}C) \\\\ &= cprob(temp=20^{\\circ}C) - cprob(temp=17.29^{\\circ}C) \\end{split} \\\\ \\end{equation*}\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#cdf",
+    "href": "posts/probability_refresher/index.html#cdf",
+    "title": "An Expansive Probability Refresher",
+    "section": "CDF",
+    "text": "CDF\nA cumulative distribution function is a function \\(F_X : \\mathbb{R} \\rightarrow [0, 1]\\) which specifies a probability measure as: \\[F_X(x) = P(X \\le x)\\] Some properties of CDF include:\n\nIt is an increasing function.\n\\(lim_{x \\rightarrow -\\infty} F_X(x) = 0\\) as \\(P(\\phi) = 0\\)\n\\(lim_{x \\rightarrow \\infty} F_X(x) = 1\\) as \\(P(\\varOmega) = 1\\)"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#pmf",
+    "href": "posts/probability_refresher/index.html#pmf",
+    "title": "An Expansive Probability Refresher",
+    "section": "PMF",
+    "text": "PMF\nFor discrete random variables, it is simpler to literally define the probability for each point. This is called the probability mass function of that random variable. For example, let us consider the tossing of two coins. The random variable is the number of heads, i.e. \\(X(\\varOmega) \\in Val(X) = \\{ 0, 1, 2 \\}\\). So, the PMF \\(p_X : Val(X) \\rightarrow [0, 1]\\) can be defined as follows: \\[p_X(0) = 0.25\\] \\[p_X(1) = 0.5\\] \\[p_X(2) = 0.25\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#pdf",
+    "href": "posts/probability_refresher/index.html#pdf",
+    "title": "An Expansive Probability Refresher",
+    "section": "PDF",
+    "text": "PDF\nIf a CDF is continuous and differentiable everywhere, the probability density function is defined as the derivative of CDF. \\[f_X(x) = \\frac{dF_X(x)}{dx}\\] Some subtle points about PDFs are as follows:\n\nPDF does not exist for a random variable if its CDF is continuous but not differentiable everywhere.\nValue of PDF at a given point \\(x\\) is not necessarily equal to the probability of that event, i.e.,\\[f_X(x) \\ne P(X=x)\\]In fact, for continuous random variables, \\(P(X=x) = 0 \\enspace \\forall \\enspace x\\) because we only talk about interval probabilities whenever continuous random variables are concerned.\n\\(f_X(x) \\ge 0\\), but not necessarily \\(\\le 1\\), as the derivative can be greater than \\(1\\).\n\\(\\int_{- \\infty}^{\\infty} f_X(x) = 1\\)"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#expectation",
+    "href": "posts/probability_refresher/index.html#expectation",
+    "title": "An Expansive Probability Refresher",
+    "section": "Expectation",
+    "text": "Expectation\nIf \\(p_X(x)\\) is the PMF of a discrete variable \\(X\\), \\[E[g(X)] = \\sum_{x \\in Val(X)} g(x)p_X(x)\\] On the other hand, for a continuous variable \\(X\\) with PDF \\(f_X(x)\\), \\[E[g(X)] = \\int_{-\\infty}^{\\infty} g(x)f_X(x)\\]\nSome properties of expectations are as follows: * \\(E[X]\\) is the same as \\(mean(X)\\) conceptually. It’s just that \\(E[X]\\) is used to define what will happen in the future while \\(mean(X)\\) is used to “summarise” the past. * \\(E[1\\{ X=k \\}] = P(X=k)\\)"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#variance",
+    "href": "posts/probability_refresher/index.html#variance",
+    "title": "An Expansive Probability Refresher",
+    "section": "Variance",
+    "text": "Variance\nIt is the measure of how concentrated a distribution is around its mean. Mathematically, we can express it as: \\[Var[X] = E[(X-E[X])^2]\\] Also, one more way to write the above formula would be: \\[Var[X] = E[X^2] - (E[X])^2\\] A simple property of variance is: \\[Var[aX] = a^2Var[X]\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#the-discrete-distros",
+    "href": "posts/probability_refresher/index.html#the-discrete-distros",
+    "title": "An Expansive Probability Refresher",
+    "section": "The Discrete Distros",
+    "text": "The Discrete Distros\n\nBernoulli - Probability of getting a head in a simple coin toss!\\[\\small p_X(x) = \\begin{cases} p &\\text{if } x = 1 \\\\ 1 - p &\\text{if } x = 0 \\end{cases}\\]\n\n\n\n\n\n\n\nBinomial - Probability of getting \\(x\\) heads in \\(n\\) tosses!\\[\\small p_X(x) = {n \\choose x} . p^x (1-p)^{n-x}\\]\n\n\n\n\n\n\n\nGeometric - Probability of getting the first head at the \\(x^{th}\\) toss!\\[p_X(x) = p(1-p)^{x-1}\\]\n\n\n\n\n\n\n\nPoisson - It is just a special case of the binomial distribution but requires some further explanation. In binomial, we know the number of trials and the probability of success in a particular trial. However, imagine a situation where we know the average success rate over a given period. Let this rate of success be \\(\\lambda\\). Also, the number of trials \\(n\\) would tend to \\(\\infty\\). Put \\(p = \\frac {\\lambda} {n}\\) in the binomial formula. After solving the limit on \\(n \\rightarrow \\infty\\) (full proof here), we get the following formula to find out the probability of getting \\(k\\) successes per period (the same as \\(\\lambda\\)’s period) would be:\\[p_X(X=k) = \\frac {e^{-\\lambda} \\lambda^k} {k!}\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#the-continuous-distros",
+    "href": "posts/probability_refresher/index.html#the-continuous-distros",
+    "title": "An Expansive Probability Refresher",
+    "section": "The Continuous Distros",
+    "text": "The Continuous Distros\n\nUniform\\[\\small f_X(x) = \\begin{cases} \\frac {1}{b-a} &\\text{if } a \\le x \\le b \\\\ 0 &\\text{otherwise} \\end{cases}\\]\n\n\n\n\n\n\n\nExponential\\[\\small f_X(x) = \\begin{cases} \\lambda e^{-\\lambda x} &\\text{if } x \\ge 0 \\\\ 0 &\\text{otherwise} \\end{cases}\\]\n\n\n\n\n\n\n\nGaussian\\[f_X(x) = \\frac {1} {\\sqrt{2 \\pi} \\ \\sigma} e^{ \\frac{1}{2} (\\frac {x-\\mu}{\\sigma})^2}\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#joint-cdf-and-marginal-cdf",
+    "href": "posts/probability_refresher/index.html#joint-cdf-and-marginal-cdf",
+    "title": "An Expansive Probability Refresher",
+    "section": "Joint CDF and Marginal CDF",
+    "text": "Joint CDF and Marginal CDF\nWorking with two variables means analysing their probability distribution together. Let our variables be \\(X\\) and \\(Y\\). Then, the joint cumulative function can be quite analogously defined as: \\[F_{XY} (x, y) = P(X \\le x, Y \\le y)\\] Great! But, we may also want to observe just one variable. Given the joint CDF, we can easily do that as follows: \\[F_{X} (x) = \\lim\\limits_{y \\rightarrow \\infty} F_{XY} (x, y)\\] These are called the marginal cumulative distribution functions. Here, the logic behind \\(y \\rightarrow \\infty\\) and \\(x \\rightarrow \\infty\\) is to allow all values of that variable, which ensures that the existence of that variable is being fully considered.\nSome properties of joint CDF include:\n\n\\(\\lim\\limits_{x, y \\rightarrow -\\infty} F_{XY} (x, y) = 0\\)\n\\(\\lim\\limits_{x, y \\rightarrow \\infty} F_{XY} (x, y) = 1\\)"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#joint-pmf-and-marginal-pmf",
+    "href": "posts/probability_refresher/index.html#joint-pmf-and-marginal-pmf",
+    "title": "An Expansive Probability Refresher",
+    "section": "Joint PMF and Marginal PMF",
+    "text": "Joint PMF and Marginal PMF\nFor two discrete random variables \\(X\\) and \\(Y\\), we can simply define the joint probability mass function as: \\[p_{XY}(x, y) = P(X=x, Y=y)\\] Let the set of all possible values taken by \\(X\\) and \\(Y\\) be \\(Val(X)\\) and \\(Val(Y)\\). Quite easily, the marginal probability mass function can be said to be: \\[p_X(x) = \\sum_{y \\in Val(Y)} p_{XY}(x, y)\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#joint-pdf-and-marginal-pdf",
+    "href": "posts/probability_refresher/index.html#joint-pdf-and-marginal-pdf",
+    "title": "An Expansive Probability Refresher",
+    "section": "Joint PDF and Marginal PDF",
+    "text": "Joint PDF and Marginal PDF\nIf the joint CDF is differentiable everywhere, we can define the joint probability density function as follows: \\[f_{XY}(x, y) = \\frac {\\partial^2 F_{XY}(x, y)} {\\partial x \\partial y}\\] Similarly, we can define the marginal probability density function as: \\[f_X(x, y) = \\int_{-\\infty}^{\\infty} f_{XY}(x, y)dy\\] Also, \\[\\int_{-\\infty}^{\\infty} \\int_{-\\infty}^{\\infty} f_{XY} (x, y) dxdy = 1\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#expectation-and-covariance",
+    "href": "posts/probability_refresher/index.html#expectation-and-covariance",
+    "title": "An Expansive Probability Refresher",
+    "section": "Expectation and Covariance",
+    "text": "Expectation and Covariance\nFor discrete variables, \\[\\mathbb{E}[g(X, Y)] = \\sum_{x \\in Val(X)} \\sum_{y \\in Val(Y)} g(x, y)p_{XY}(x, y)\\] For continuous variables, \\[\\mathbb{E}[g(X, Y)] = \\int_{-\\infty}^{\\infty} \\int_{-\\infty}^{\\infty} g(x, y)f_{XY}(x, y)dxdy\\] Now, a useful thing to observe is how both variables “correlate” with each other. By “correlate”, I mean “do larger values of \\(X\\) correspond with larger values of \\(Y\\) and how often?”. This is called covariance and can be computed as follows: \\[Cov[X, Y] = \\mathbb{E} [(X - \\mathbb{E}[X])(Y-\\mathbb{E}[Y])]\\] By a little manuevering, we can derive: \\[Cov[X, Y] = \\mathbb{E}[XY] - \\mathbb{E}[X]\\mathbb{E}[Y]\\] When larger values of \\(X\\) correspond with larger values of \\(Y\\), the covariance is negative. On the other hand, when larger values of \\(X\\) correspond with smaller values of \\(Y\\), the covariance is positive.\nSome important points to note:\n\n\\(Var[X + Y] = Var[X] + Var[Y] + 2Cov[X, Y]\\)\n\\(Cov[X, Y]=0 \\rightarrow\\) Independence of \\(X\\) and \\(Y\\) but its inverse is not true. A counter-example is: Take \\(X\\) and \\(Y\\) such that \\(Y=X^2\\). Here, \\(Cov[X, Y] = 0\\) but \\(X\\) and \\(Y\\) are clearly not independent."
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#conditional-probability",
+    "href": "posts/probability_refresher/index.html#conditional-probability",
+    "title": "An Expansive Probability Refresher",
+    "section": "Conditional Probability",
+    "text": "Conditional Probability\nLet \\(A\\) and \\(B\\) be two events. The probability of an event \\(A\\) after observing the occurrence of the event \\(B\\) is termed as conditional probability and denoted by \\(P(A | B)\\). If \\(P(B) \\ne 0\\), we can define the conditional probability as: \\[P(A | B) = \\frac {P(A \\cap B)}{P(B)}\\] The logic behind this famous problem is not that famous, unfortunately! Let me explain. Let \\(S\\) be the sample space. Our task is to find the probability of \\(A\\) given that we have observed \\(B\\). Obviously, \\(P(S) = 1\\). However, we need to focus on \\(B\\) which is a subset of \\(S\\). So, we need to define another function \\(P^\\prime\\) such that \\(P^\\prime (B) = 1\\). This leads us to the following definition of \\(P^\\prime\\): \\[P^\\prime(A) = \\frac {1}{P(B)} P(A)\\] However, there’s a small catch. Since we have observed \\(B\\), we need to discard the part of \\(A\\) which resides outside of \\(B\\)! Hence, the new definition becomes: \\[P^\\prime(A) = \\frac {1}{P(B)} P(A \\cap B)\\]"
+  },
+  {
+    "objectID": "posts/probability_refresher/index.html#the-concept-of-independence",
+    "href": "posts/probability_refresher/index.html#the-concept-of-independence",
+    "title": "An Expansive Probability Refresher",
+    "section": "The Concept of Independence",
+    "text": "The Concept of Independence\nOnly a bit of common sense is required to understand that \\(A\\) and \\(B\\) are independent if: \\[P(A|B) = P(A)\\] Putting in the conditional probability formula, we get: \\[P(A \\cap B) = P(A) \\cdot P(B)\\]"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Rushi’s Furnace",
+    "section": "",
+    "text": "An Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\nRushi Shah\n\n\n\n\n\n\nNo matching items"
+  }
+]
