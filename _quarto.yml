@@ -6,9 +6,9 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/shahrushi2003
       - icon: twitter
-        href: https://twitter.com
+        href: https://twitter.com/RushiShah1729
 format:
   html:
     theme: darkly

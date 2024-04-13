@@ -1,19 +1,20 @@
 ---
 title: "About"
-image: profile.jpg
+image: profile.jpeg
 about:
   template: jolla
   links:
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com
+    - icon: twitter-x
+      href: https://twitter.com/RushiShah1729
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://linkedin.com/in/shah-rushi
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/shahrushi2003
 
 ---
 
-About this blog
+Yo, Rushi here! I am an undergrad at IIT Jodhpur doing research on topics related to “artificial learning”. I like to learn new things by helping others learn about them. I love explaining complex things in a simple manner and simple things with a complex perspective! 
+
+Also, e/acc ftw! Let’s ensure AGI takes over the world before politics and war do!
