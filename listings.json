@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/restricted_boltzmann_machines/index.html",
       "/posts/probability_refresher/index.html"
     ]
   }

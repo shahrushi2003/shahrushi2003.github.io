@@ -119,10 +119,66 @@
     "text": "The Concept of Independence\nOnly a bit of common sense is required to understand that \\(A\\) and \\(B\\) are independent if: \\[P(A|B) = P(A)\\] Putting in the conditional probability formula, we get: \\[P(A \\cap B) = P(A) \\cdot P(B)\\]"
   },
   {
+    "objectID": "posts/restricted_boltzmann_machines/index.html",
+    "href": "posts/restricted_boltzmann_machines/index.html",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "",
+    "text": "Generative modelling is the task of modelling the data distribution (which helps us generate new, similar, synthetic data points). There are multiple ways of dealing with this problem, with VAEs, diffusion models, and GANs being some of the popular ones. RBMs belong to this category of generative models, i.e. they are trained to model the data distribution \\(p(x)\\).\nIn this blog, we will extensively explore binary RBMs (i.e., RBMs that support only binary data). RBMs are not used today because training them on continuous data is difficult. Nevertheless, I find them to be a great introduction to energy-based models and concepts like Gibbs sampling and the Gibbs-Boltzmann distribution. Let’s start right away."
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#first-term-simplification",
+    "href": "posts/restricted_boltzmann_machines/index.html#first-term-simplification",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "First Term Simplification",
+    "text": "First Term Simplification\nNow, let’s calculate the first term of this gradient with \\(\\theta\\) as \\(w_{ij}\\):\n\\[\n-\\sum_\\textbf{h} p( \\textbf{h | v} ) \\frac{\\partial E(\\textbf{v}, \\textbf{h})}{\\partial w_{ij}}\n=\n\\sum_\\textbf{h} p( \\textbf{h | v} ) h_i v_j\n\\]\nHere, some calculation tricks can be applied to simplify the right-side expression:\n\nSince, all \\(h_i\\)’s are independent, we can write \\(p( \\textbf{h | v} ) = \\prod_{k=1}^n p(h_k|\\textbf{v})\\).\n\\(\\sum_h\\) can be rewritten as \\(\\sum_{h_i} \\sum_{\\textbf{h}_{\\textbf{-i}}}\\), where \\(\\textbf{h}_{\\textbf{-i}}\\) represents a vector without the ith node.\nLastly, we can rewrite \\(\\prod_{k=1}^n p(h_k|\\textbf{v}) = p(h_i| \\textbf{v}) p(\\textbf{h}_{\\textbf{-i}} | \\textbf{v})\\).\n\\(\\sum_{\\textbf{h}_{\\textbf{-i}}}  p(\\textbf{h}_{\\textbf{-i}} | \\textbf{v}) = 1\\), obviously!\n\nUsing the above tricks, the equation becomes:\n\\[\\begin{equation*}\n\\begin{split}\n\n-\\sum_\\textbf{h} p( \\textbf{h | v} ) h_i v_j &= \\sum_{h_i} \\sum_{\\textbf{h}_{\\textbf{-i}}} p(h_i| \\textbf{v}) p(\\textbf{h}_{\\textbf{-i}} | \\textbf{v}) h_i v_j\n\\\\\n&= \\sum_{h_i} p(h_i| \\textbf{v}) h_i v_j \\sum_{\\textbf{h}_{\\textbf{-i}}}  p(\\textbf{h}_{\\textbf{-i}} | \\textbf{v})\n\\\\\n&= \\sum_{h_i} p(h_i| \\textbf{v}) h_i v_j\n\\\\\n&= p(H_i=0| \\textbf{v}) (0) v_j + p(H_i=1| \\textbf{v}) (1) v_j\n\\\\\n&= p(H_i=1| \\textbf{v}) v_j\n\\\\\n&= \\sigma \\Big(\\sum_{j=1}^m w_{ij}v_j + c_i \\Big) v_j\n\n\\end{split}\n\\end{equation*}\\]"
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#second-term-simplification",
+    "href": "posts/restricted_boltzmann_machines/index.html#second-term-simplification",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "Second Term Simplification",
+    "text": "Second Term Simplification\n\\[\\begin{equation*}\n\\begin{split}\n\n\\sum_{\\textbf{v},\\textbf{h}} p(\\textbf{v},\\textbf{h}) \\frac{\\partial E(\\textbf{v},\\textbf{h})}{\\partial w_{ij}}\n&= -\\sum_\\textbf{v} p(\\textbf{v})\n\\sum_\\textbf{h} p( \\textbf{h | v} ) h_i v_j\n\n\\\\\n\n&= -\\sum_\\textbf{v} p(\\textbf{v})\np(H_i=1| \\textbf{v}) v_j\n\\end{split}\n\\end{equation*}\\]\nHence, the final gradient comes out to be:\n\\[\n\\frac{\\partial\\mathcal{L}(\\theta|\\textbf{v})}{\\partial w_{ij}}\n=\np(H_i=1| \\textbf{v}) v_j\n-\n\\sum_\\textbf{v} p(\\textbf{v})\np(H_i=1| \\textbf{v}) v_j\n\\]"
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#approx.-1",
+    "href": "posts/restricted_boltzmann_machines/index.html#approx.-1",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "Approx. 1",
+    "text": "Approx. 1\nInstead of looping over \\(\\textbf{v}\\), we sample some samples from the distribution at hand [\\(p(\\textbf{v}, \\textbf{h})\\) in this case] and calculate their mean. Practically, using just one sample works fine and fairly approximates the expectation.\n\\[\n\\hat{\\textbf{v}} \\sim p(\\textbf{v}, \\textbf{h})\n\\]\n\\[\n\\frac{\\partial\\mathcal{L}(\\theta|\\textbf{v})}{\\partial w_{ij}}\n=\np(H_i=1| \\textbf{v}) v_j\n-\np(H_i=1| \\hat{\\textbf{v}}) \\hat{v}_j\n\\]\n\\[\n\\frac{\\partial\\mathcal{L}(\\theta|\\textbf{v})}{\\partial b_{j}} = v_j - \\hat{v}_j\n\\]\n\\[\n\\frac{\\partial\\mathcal{L}(\\theta|\\textbf{v})}{\\partial b_{j}}\n=\np(H_i=1| \\textbf{v})\n-\np(H_i=1| \\hat{\\textbf{v}})\n\\]"
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#approx.-2",
+    "href": "posts/restricted_boltzmann_machines/index.html#approx.-2",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "Approx. 2",
+    "text": "Approx. 2\nStill, sampling \\(\\hat{\\textbf{v}}\\) from \\(p(\\textbf{v}, \\textbf{h})\\) is not possible because of the intractable \\(Z\\) term encountered in the calculation of \\(p(\\textbf{v}, \\textbf{h})\\). However, the good news is that it is relatively (very!) easy to calculate \\(p(\\textbf{h} | \\textbf{v})\\) and \\(p(\\textbf{v} | \\textbf{h})\\) (remember the Bernoulli distributions we described a while ago?). Here’s where the Gibbs sampler comes in handy.\nBasically, according to Mr. Gibbs, if you start with some \\(\\textbf{v}^0\\) AND sample \\(\\textbf{h}^1 \\sim p(\\textbf{h} | \\textbf{v}^0)\\) and \\(\\textbf{v}^1 \\sim p(\\textbf{v} | \\textbf{h}^1)\\) AND keep going till convergence (suppose we reach convergence after \\(k\\) iterations), the samples \\(\\textbf{h}^k\\) and \\(\\textbf{v}^k\\) will look as if they were sampled from the intractable joint distribution \\(p(\\textbf{v}, \\textbf{h})\\).\nWe use Gibbs sampling because we can easily sample from \\(p(\\textbf{h}|\\textbf{v})\\) and \\(p(\\textbf{v}|\\textbf{h})\\) which are simple Bernoulli distributions."
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#approx.-3",
+    "href": "posts/restricted_boltzmann_machines/index.html#approx.-3",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "Approx. 3",
+    "text": "Approx. 3\nA small problem persists — performing Gibbs sampling until convergence is computationally expensive. However, the good news is that performing just one step of Gibbs sampling approximates the sampling process fairly enough for the gradient descent algorithm to work."
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#rbms",
+    "href": "posts/restricted_boltzmann_machines/index.html#rbms",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "RBMs",
+    "text": "RBMs\n\nAn Introduction to RBMs by Fischer and Igel\nHinton’s “A Practical Guide to Training RBMs”\nAn introductory Medium blog"
+  },
+  {
+    "objectID": "posts/restricted_boltzmann_machines/index.html#gibbs",
+    "href": "posts/restricted_boltzmann_machines/index.html#gibbs",
+    "title": "Bernoulli Restricted Boltzmann Machines",
+    "section": "Gibbs",
+    "text": "Gibbs\n\nA short intro to Gibbs sampling\nA detailed intro to Gibbs sampling"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Rushi’s Furnace",
     "section": "",
-    "text": "An Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\nRushi Shah\n\n\n\n\n\n\nNo matching items"
+    "text": "Bernoulli Restricted Boltzmann Machines\n\n\n\n\n\n\n\n\n\n\n\nMay 18, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nAn Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\nRushi Shah\n\n\n\n\n\n\nNo matching items"
   }
 ]
