@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/kolmogorov_and_soph/index.html",
+      "/posts/policy_gradient/index.html",
       "/posts/intro_rl/index.html",
       "/posts/restricted_boltzmann_machines/index.html",
       "/posts/probability_refresher/index.html"

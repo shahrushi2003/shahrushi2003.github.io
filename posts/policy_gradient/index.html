@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rushi Shah">
-<meta name="dcterms.date" content="2024-05-18">
+<meta name="dcterms.date" content="2024-12-11">
 
-<title>Rushi’s Furnace - Bernoulli Restricted Boltzmann Machines</title>
+<title>Rushi’s Furnace - The Policy Gradient</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,9 +41,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
-<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -152,7 +149,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Bernoulli Restricted Boltzmann Machines</h1>
+      <h1 class="title">The Policy Gradient</h1>
                       </div>
   </div>
     
@@ -169,7 +166,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 18, 2024</p>
+        <p class="date">December 11, 2024</p>
       </div>
     </div>
     
@@ -188,297 +185,248 @@ window.Quarto = {
 
 
 
-<section id="what-is-generative-modelling" class="level1">
-<h1>What is Generative Modelling?</h1>
-<p>Generative modelling is the task of modelling the data distribution (which helps us generate new, similar, synthetic data points). There are multiple ways of dealing with this problem, with VAEs, diffusion models, and GANs being some of the popular ones. RBMs belong to this category of generative models, i.e.&nbsp;they are trained to model the data distribution <span class="math inline">\(p(x)\)</span>.</p>
-<p>In this blog, we will extensively explore <strong>binary RBMs</strong> (i.e., RBMs that support only binary data). RBMs are not used today because training them on continuous data is difficult. Nevertheless, I find them to be a great introduction to energy-based models and concepts like Gibbs sampling and the Gibbs-Boltzmann distribution. Let’s start right away.</p>
-</section>
-<section id="the-concept-of-energy" class="level1">
-<h1>The Concept of Energy</h1>
-<p>Today, there exists a class of models called energy-based models, which provide a physics-oriented approach to model complex probability distributions based on the concept of “energy” of a system. This is made possible by defining an energy function <span class="math inline">\(E(\phi)\)</span> which calculates the energy of a given state <span class="math inline">\(\phi\)</span>. Utilising <span class="math inline">\(E(\phi)\)</span>, we can project the energy to a probabilistic space by using the Gibbs-Boltzmann distribution so that lower-energy states will have higher probability density and vice versa.</p>
+<p>The idea of policy-gradient methods is to change our policy using gradient descent methods such that our RL objective is maximised. Let’s see how.</p>
+<p>(Feel free to check out <a href="https://shahrushi2003.github.io/posts/intro_rl/">my previous blog</a> to get an introduction to RL, if you are not familiar with the basic ideology.)</p>
+<section id="some-boring-notation" class="level1">
+<h1>Some boring notation</h1>
+<p>Before starting, let’s just understand what is meant by a “trajectory distribution”. It is the distribution over all possible trajectories, assigning a probability to each one of them. Now, using the Markov assumption, we can write the trajectory distribution for a trajectory <span class="math inline">\(\tau\)</span> as:</p>
 <p><span class="math display">\[
-p(\phi) = \frac{1}{Z} e^{-E(\phi)} ; \text{ where }
-Z = \sum_{\phi} e^{-E(\phi)} \text{ is a normalising factor}
+p(\tau) = p_\theta (s_1, a_1, \ldots, s_T, a_T) = p(s_1) \prod_{t=1}^{T} \pi_\theta (a_t | s_t) p(s_{t+1} | s_t, a_t)
 \]</span></p>
-</section>
-<section id="architecture" class="level1">
-<h1>Architecture</h1>
-<p>The components of binary RBMs can be separated into:</p>
-<section id="state" class="level3">
-<h3 class="anchored" data-anchor-id="state"><strong>State</strong></h3>
-<ul>
-<li><strong>Visible Nodes</strong> - These <strong>binary</strong> nodes are responsible for representing the data points in the input space. The use of these nodes will be clearer as we go deeper.</li>
-<li><strong>Hidden Nodes</strong> - These are <strong>binary</strong> nodes responsible for creating an information bottleneck to enforce proper learning of underlying features. They represent data points in the latent space.</li>
-</ul>
-</section>
-<section id="learnable-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="learnable-parameters"><strong>Learnable Parameters</strong></h3>
-<ul>
-<li><strong>Visible Biases</strong> - Each of the visible nodes has a bias parameter.</li>
-<li><strong>Hidden Biases</strong> - Each of the hidden nodes has a bias parameter.</li>
-<li><strong>Weights</strong> - Each visible node is connected to all hidden nodes through <strong>learnable</strong> weights. Basically, these weights will be a matrix of size (num_visible_nodes x num_hidden_nodes).</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="rbms.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="rbms.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></a></p>
-</figure>
-</div>
-</section>
-</section>
-<section id="notation" class="level1">
-<h1>Notation</h1>
-<p><span class="math inline">\(m\)</span> - number of visible nodes</p>
-<p><span class="math inline">\(v_j\)</span> - <span class="math inline">\(j^{th}\)</span> visible node</p>
-<p><span class="math inline">\(b_j\)</span> - bias of <span class="math inline">\(j^{th}\)</span> visible node</p>
-<p><span class="math inline">\(\textbf{v}\)</span> - <span class="math inline">\([v_1, \dots v_m]\)</span></p>
-<p><span class="math inline">\(n\)</span> - number of hidden nodes</p>
-<p><span class="math inline">\(h_i\)</span> - <span class="math inline">\(i^{th}\)</span> hidden node</p>
-<p><span class="math inline">\(c_i\)</span> - bias of <span class="math inline">\(i^{th}\)</span> hidden node</p>
-<p><span class="math inline">\(\textbf{h}\)</span> - <span class="math inline">\([h_1, \dots h_n]\)</span></p>
-<p><span class="math inline">\(w_{ij}\)</span> - weight connecting the <span class="math inline">\(j^{th}\)</span> visible node and the <span class="math inline">\(i^{th}\)</span> hidden node</p>
-</section>
-<section id="log-likelihood" class="level1">
-<h1>Log-Likelihood</h1>
-<p>Like every other generative model, RBMs are trained to learn a probability distribution to maximise the probability (or the log probability) of observing the observed training samples. In other words, assuming only one sample <span class="math inline">\(\textbf{v}\)</span> is given, we need to find theta such that the below function is maximised:</p>
+<p>Also, we can write the total reward of a trajectory as:</p>
 <p><span class="math display">\[
-\mathcal{L}(\theta|\textbf{v}) = ln(p(\textbf{v}|\theta))
+r(\tau) = \sum_{t=1}^T r(s_t, a_t)
 \]</span></p>
-<p>Here’s where the energy-based approach comes into play by providing a platform to define <span class="math inline">\(p(\textbf{v})\)</span>. The energy function for RBMs is defined as:</p>
+<p>One important thing to note here is that <strong>we don’t know anything about <span class="math inline">\(p(s_1)\)</span> and <span class="math inline">\(p(s_{t+1} | s_t, a_t)\)</span> at all</strong>. <strong>But, we can gather samples by interacting with the environment using our policy.</strong> Everything we do from now on should respect this assumption.</p>
+</section>
+<section id="some-interesting-math" class="level1">
+<h1>Some interesting math</h1>
+<p>We really like expectations in RL but the integrals that follow, not really! Do you know why? Because they are very hard to calculate sometimes. Especially when the variable of integration can assume a lot, lot of possible values. This is where Monte-Carlo helps us out by replacing the integral with summation. In mathematical terms:</p>
 <p><span class="math display">\[
-E(\textbf{v}, \textbf{h}) = - \sum_{i} \sum_{j} w_{ij} v_j h_i - \sum_{j} b_j v_j - \sum_{i} c_i h_i
-\]</span></p>
-<p>Given the weights and biases, this energy function measures the compatibility between the visible and hidden units. Lower energy states correspond to more compatible or favourable configurations of visible and hidden units, while higher energy states correspond to less compatible configurations.</p>
-<p>Since we now have the energy function, we can calculate the joint probability distribution as:</p>
-<p><span class="math display">\[
-p(\textbf{v}, \textbf{h}) = \frac{1}{Z} e^{-E(\textbf{v}, \textbf{h})}
-\]</span></p>
-<p>Where <span class="math inline">\(Z = \sum_{\textbf{v}, \textbf{h}} e^{-E(\textbf{v}, \textbf{h})}\)</span> the normalisation constant (also known as the partition function) ensures that the probabilities sum up to 1 over all possible configurations.</p>
-<p>Defining the joint distribution unlocks the ability to define all underlying distributions. Through a series of calculations, we get the following expressions:</p>
-<ol type="1">
-<li><p>The joint distribution can now be used to define <span class="math inline">\(p(\textbf{v})\)</span>, the logarithm of which we need to minimise.</p>
-<p><span class="math display">\[
-p(\textbf{v}) = \sum_\textbf{h} p(\textbf{v}, \textbf{h}) = \frac{1}{Z} \sum_\textbf{h} e^{-E(\textbf{v}, \textbf{h})}
-\]</span></p></li>
-<li><p>Since <span class="math inline">\(\textbf{h}\)</span> is a binary variable, it can be represented with the help of a Bernoulli distribution as follows:</p>
-<p><span class="math display">\[
-p(H_i=1| \textbf{v})
-= \sigma \Big(\sum_{j=1}^m w_{ij}v_j + c_i \Big)
+\begin{equation*}
+\begin{split}
+E_{x \sim p(x)}[f(x)] &amp;= \int_x p(x)f(x)dx
 \\
-p(H_i=0| \textbf{v}) = 1 - p(H_i=1| \textbf{v})
-\]</span></p></li>
-<li><p>Since <span class="math inline">\(\textbf{v}\)</span> is also a binary variable, so we can do the same here as well:</p>
+&amp;\approx \frac{1}{N} \sum_{i=1}^N f(x_i) \quad (x_i \sim p(x))
+\end{split}
+\end{equation*}
+\]</span></p>
+<p>Monte-Carlo also helps us approximate certain integrals. For example, if there’s a function <span class="math inline">\(f(x)\)</span> which can also be broken down as <span class="math inline">\(p(x)g(x)\)</span>, we can easily approximate its integral.</p>
 <p><span class="math display">\[
-p(V_j=1| \textbf{h})
-= \sigma \Big(\sum_{i=1}^n w_{ij}h_i + b_j \Big)
+\begin{equation*}
+\begin{split}
+\int_x f(x)dx &amp;= \int_x p(x)g(x)dx
 \\
-p(V_j=0| \textbf{h}) = 1 - p(V_j=1| \textbf{h})
-\]</span></p></li>
-</ol>
+&amp;\approx \frac{1}{N} \sum_{i=1}^N g(x_i) \quad (x_i \sim p(x))
+\end{split}
+\end{equation*}
+\]</span></p>
 </section>
-<section id="gradient-calculation-logic" class="level1">
-<h1>Gradient Calculation Logic</h1>
-<p>Let’s go through a clear breakdown of the differentiation process. First, let’s simplify the loss function a bit:</p>
+<section id="evaluating-our-policy" class="level1">
+<h1>Evaluating our policy</h1>
+<p>Just to help you recall, here’s the RL objective defined previously that we need to maximise:</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+J(\theta) &amp;= E_{\tau \sim p_\theta(\tau)} [r(\tau)]  = E_{\tau \sim p_\theta(\tau)} \bigg[\sum_t r(s_t, a_t) \bigg]
+\\
+&amp;= \sum_{t=1}^T E_{(s_t, a_t) \sim p_\theta(s_t, a_t)} [r(s_t, a_t)] \text{ (assuming the chain terminates after finite steps)}
+\end{split}
+\end{equation*}
+\]</span></p>
+<p>Now, even though we don’t have <span class="math inline">\(p(s_1)\)</span> and <span class="math inline">\(p(s_{t+1} | s_t, a_t)\)</span>, we can estimate <span class="math inline">\(J(\theta)\)</span> by simulating our policy <span class="math inline">\(N\)</span> times in the environment.</p>
+<p><span class="math display">\[
+J(\theta) \approx \frac{1}{N} \sum_i \sum_t r(s_{i, t}, a_{i, t})
+\]</span></p>
+</section>
+<section id="calculating-the-gradient-of-jtheta" class="level1">
+<h1>Calculating the gradient of <span class="math inline">\(J(\theta)\)</span></h1>
+<p>Now, that we know how to calculate <span class="math inline">\(J(\theta)\)</span>, we face the task of estimating <span class="math inline">\(\nabla_\theta J(\theta)\)</span>. Let’s see how:</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+\nabla_\theta J(\theta)
+&amp;=
+\nabla_\theta E_{\tau \sim p_\theta(\tau)} [r(\tau)]
+\\
+&amp;= \nabla_\theta \int_\tau p_\theta(\tau) r(\tau)d\tau
+\\
+&amp;= \int_\tau \nabla_\theta p_\theta(\tau) \cdot r(\tau)d\tau \\
+&amp;\text{(since gradient is a linear operator, we can shift it inside the integral)}
+\end{split}
+\end{equation*}
+\]</span></p>
+<p>This is bad, since we can’t really integrate over all trajectories, right? Yes, you are right. The solution is Monte-Carlo! But we first need to somehow separate out <span class="math inline">\(p_\theta(\tau)\)</span> first. This can be done using a nice little thing called as the “log-derivative trick”. By simple calculus, we can write:</p>
+<p><span class="math display">\[
+\nabla_\theta \log(p_\theta(x)) = \frac{\nabla_\theta p_\theta(x)}{p_\theta(x)}
+\\
+\therefore \nabla_\theta p_\theta(x) = p_\theta(x) \cdot \nabla_\theta \log(p_\theta(x))
+\]</span></p>
+<p>Now, the problem is solved.</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+\int_\tau \nabla_\theta p_\theta(\tau) \cdot r(\tau)d\tau &amp;= \int_\tau p_\theta(\tau) \cdot  \nabla_\theta \log(p_\theta(\tau)) \cdot r(\tau) d\tau
+\\
+&amp;\approx \frac{1}{N} \sum_{i=1}^N \nabla_\theta \log(p_\theta(\tau_i)) \cdot r(\tau_i) \text{ where } \tau_i \sim p(\tau)
+\end{split}
+\end{equation*}
+\]</span></p>
+<p>But, another problem persists. We still don’t know how to calculate the gradient of <span class="math inline">\(\nabla_\theta \log(p_\theta(\tau))\)</span>. Let’s try to calculate it:</p>
+<p><span class="math display">\[
+p_\theta(\tau) = p(s_1) \prod_{t=1}^{T} \pi_\theta (a_t | s_t) p(s_{t+1} | s_t, a_t)
+\\
+\log(p_\theta(\tau)) = \log p(s_1) + \sum_{t=1}^T \log \pi_\theta (a_t | s_t) + \sum_{t=1}^T \log p(s_{t+1} | s_t, a_t)
+\]</span></p>
+<p>Well, well, well. Fortunately, all the problematic terms are independent of <span class="math inline">\(\theta\)</span>, which removes them from the derivative.</p>
+<p><span class="math display">\[
+\nabla_\theta \log p_\theta(\tau) = \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_t | s_t)
+\]</span></p>
+<p>Finally, we can summarise everything as follows:</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+\nabla_\theta J(\theta) &amp;= \nabla_\theta E_{\tau \sim p_\theta(\tau)} [r(\tau)]
+\\
+&amp;= E_{\tau \sim p_\theta(\tau)} [\nabla_\theta \log p_\theta(\tau) r(\tau)] \text{ (using log-derivative trick)}
+\\
+&amp;= E_{\tau \sim p_\theta(\tau)} \bigg[ \bigg( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_t | s_t) \bigg) \bigg( \sum_{t=1}^Tr(s_t, a_t) \bigg) \bigg]
+\\
+&amp;\approx \frac{1}{N} \sum_{i=1}^N  \bigg( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg) \bigg( \sum_{t=1}^Tr(s_{i,t}, a_{i,t}) \bigg)
+\end{split}
+\end{equation*}
+\]</span></p>
+</section>
+<section id="reinforce" class="level1">
+<h1>REINFORCE</h1>
+<p>Now that we have found out a tractable way to estimate the gradient of the policy, we can just take descent steps and improve our policy. The summary is as follows:</p>
+<p><img src="reinforce.png" class="img-fluid"></p>
+</section>
+<section id="intuition-behind-reinforce" class="level1">
+<h1>Intuition behind REINFORCE</h1>
+<p>What if we use the maximum likelihood objective to train our policy, the gradient would turn out to be:</p>
+<p><span class="math display">\[
+\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^N  \bigg( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg)
+\]</span></p>
+<p>The above equation suggests that we are trying to tune our policy such that the probability of observing the observed samples increases. This is what “maximising log-likelihood” means, right? Actually, this makes sense for supervised learning settings where we have only good examples (for eg. an image from the MNIST data is a good example of a digit). However, using this objective for improving our policy is non-sensical because this means we are changing policy such that the chances of observing trash trajectories that we just observed increases. The quality of observed data matters. In supervised settings, it is high. But in our case, not quite.</p>
+<p>On the other hand, our policy gradient looks like:</p>
+<p><span class="math display">\[
+\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^N  \bigg( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg) \bigg( \sum_{t=1}^Tr(s_{i,t}, a_{i,t}) \bigg)
+\]</span></p>
+<p>This can be seen as a <em>weighted</em> log-likelihood function, weighted by the rewards of the corresponding trajectories. In other words, we can say that we plan to update the policy so as to increase OR decrease the probabilities of observed trajectories depending on their reward value. Now this extra reward term is what makes maximum likelihood estimation applicable to our setting. We don’t want to blindly increase the chances of all observed trajectories. We acknowledge the uselessness of some of them and want to decrease their chances while increasing the chances for those that give higher total rewards. This makes sense.</p>
+</section>
+<section id="but-wait-whats-wrong-with-it" class="level1">
+<h1>But wait, what’s wrong with it?</h1>
+<p>Here’s the gradient we recently derived:</p>
+<p><span class="math display">\[
+\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^N  \bigg( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg) \bigg( \sum_{t=1}^Tr(s_{i,t}, a_{i,t}) \bigg)
+\]</span></p>
+<p>So, remember the cute little log-derivative trick we applied a while ago? Turns out that there’s a big problem when using it. It is a very high variance estimator. The log-derivative trick is also called the REINFORCE estimator or the score-function estimator.</p>
+<p><span class="math display">\[
+\nabla_\theta E_{\tau \sim p_\theta(\tau)} [r(\tau)] = E_{\tau \sim p_\theta(\tau)} [r(\tau)\nabla_\theta log(p_\theta(\tau)) ]
+\]</span></p>
+<p>However, this is zero-bias but high-variance estimator, meaning that if the number of samples is infinite, it will eventually give the accurate estimation, but for lesser number of samples, it might provide varied answers. For reasons behind this, see this <a href="https://stats.stackexchange.com/questions/261852/why-is-the-log-derivative-estimator-considered-of-large-variance">link</a>. Such a high variance estimator would work well only if we have a lot, lot of samples. which is not usually feasible.</p>
+<p>This means that we need to find a better estimator to estimate the gradient OR reduce the variance of our REINFORCE estimator.</p>
+</section>
+<section id="tricks-to-reduce-variance" class="level1">
+<h1>Tricks to reduce variance</h1>
+<section id="causality-assumption" class="level2">
+<h2 class="anchored" data-anchor-id="causality-assumption">Causality Assumption</h2>
+<p>This assumption says that “the present policy cannot affect previous rewards.” Come on man, this is always true, provided that we don’t do time travel. Also, note that this is not the same as the Markov property, which says that “the states in the future are independent of the past given the present.”</p>
+<p>We can remove some unnecessary terms from our gradient estimation by using this “causality” assumption as follows:</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+\nabla_\theta J(\theta) &amp;\approx \frac{1}{N} \sum_{i=1}^N  \bigg( \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg) \bigg( \sum_{t=1}^Tr(s_{i,t}, a_{i,t}) \bigg)
+\\
+&amp;= \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg( \sum_{t'=1}^Tr(s_{i,t'}, a_{i,t'}) \bigg)
+\\
+&amp;= \frac{1}{N} \sum_{i=1}^N \sum_{t=1}^T \nabla_\theta \log \pi_\theta (a_{i,t} | s_{i,t}) \bigg( \sum_{t'=\textcolor{red}{t}}^Tr(s_{i,t'}, a_{i,t'}) \bigg)
+\end{split}
+\end{equation*}
+\]</span></p>
+</section>
+<section id="baseline-trick" class="level2">
+<h2 class="anchored" data-anchor-id="baseline-trick">Baseline Trick</h2>
+<p>Remember the intuition behind REINFORCE? The idea was to “change the policy such that the probability of trajectories with higher rewards and vice-versa”. What if we modify this statement slightly? The new idea is to “change the policy such that the probability of trajectories with rewards higher <em>than average</em> and vice-versa”. This is better, isn’t it? So, the new gradient becomes:</p>
+<p><span class="math display">\[
+\nabla_\theta J(\theta) = \frac{1}{N} \sum_{i=1}^N \nabla_\theta log(p_\theta(\tau_i)) \cdot (r(\tau_i) \textcolor{red}{- b})
+\\
+\text{where } b=\frac{1}{N} \sum_{i=1}^N r(\tau_i)
+\]</span></p>
+<p>But …</p>
+<section id="is-this-new-estimator-still-unbiased" class="level3">
+<h3 class="anchored" data-anchor-id="is-this-new-estimator-still-unbiased">Is this new estimator still unbiased?</h3>
+<p>Yes! Because the expectation of <span class="math inline">\(E[\nabla_\theta log(p_\theta(\tau)) \cdot b]\)</span> is zero. Let’s see how:</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+E[\nabla_\theta log(p_\theta(\tau)) \cdot b]
+&amp;= \int p_\theta(\tau)\nabla_\theta \log p_\theta(\tau)b d\tau
+\\
+&amp;= \int \nabla_\theta p_\theta(\tau)b d\tau
+\\
+&amp;= b \nabla_\theta \int p_\theta(\tau) d\tau
+\\
+&amp;= b \nabla_\theta 1
+\\
+&amp;= 0
+\end{split}
+\end{equation*}
+\]</span></p>
+<p>This means that the addition of <span class="math inline">\(b\)</span> doesn’t affect the bias of the old estimator. Good.</p>
+</section>
+<section id="does-this-new-estimator-have-lower-variance" class="level3">
+<h3 class="anchored" data-anchor-id="does-this-new-estimator-have-lower-variance">Does this new estimator have lower variance?</h3>
+<p>For the sake of notational simplicity, let’s keep <span class="math inline">\(g(\tau) = \nabla_\theta log(p_\theta(\tau))\)</span>. Let’s calculate the variance now:</p>
+<p><span class="math display">\[
+\nabla_\theta J(\theta) = E_{\tau\sim p(\tau)} [g(\tau) (r(\tau) - b)]
+\]</span></p>
+<p>Using the identity <span class="math inline">\(Var(X) = E[X^2] - E[X]^2\)</span>, we can write:</p>
+<p><span class="math display">\[
+\begin{equation*}
+\begin{split}
+\text{New Var} &amp;= E_{\tau\sim p(\tau)} [g(\tau)^2 (r(\tau) - b)^2] - E[g(\tau) (r(\tau) - b)]^2
+\\
+&amp;= E_{\tau\sim p(\tau)} [g(\tau)^2 (r(\tau) - b)^2] - E[g(\tau) (r(\tau))]^2 \text{ using previous result}
+\\
+&amp;= E_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)^2] - 2bE_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] + b^2E_{\tau\sim p(\tau)} [g(\tau)^2] - E[g(\tau) (r(\tau))]^2
+\\
+&amp;= \textcolor{red}\{E_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)^2]  - E[g(\tau) (r(\tau))]^2 \textcolor{red}\} - 2bE_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] + b^2E_{\tau\sim p(\tau)} [g(\tau)^2]
+\\
+&amp;= \text{Old Var} - 2bE_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] + b^2E_{\tau\sim p(\tau)} [g(\tau)^2]
+\end{split}
+\end{equation*}
+\]</span></p>
+<p>Now, if we want the baseline to reduce the variance, the new variance has to be smaller.</p>
+<p><span class="math display">\[
+\text{New Var} - \text{Old Var} &lt; 0
+\\
+- 2bE_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] + b^2E_{\tau\sim p(\tau)} [g(\tau)^2] &lt; 0
+\]</span></p>
+<p>Assuming positive rewards, we can say that <span class="math inline">\(b&gt;0\)</span>. This means that:</p>
+<p><span class="math display">\[
+0 &lt; b &lt; \frac{2E_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] }{ E_{\tau\sim p(\tau)} [g(\tau)^2]}
+\]</span></p>
+<p>Our baseline <span class="math inline">\(b = E_{\tau\sim p(\tau)} [r(\tau)] \approx \frac{1}{N} \sum_{i=1}^N r(\tau_i)\)</span> will satisfy this condition only if <span class="math inline">\(cov[(g(\tau)^2, r(\tau)] &lt; -E[g(\tau)^2 \cdot r(\tau)]\)</span> which is reasonable since the magnitude of gradient of log probs is more likely to be positively correlated with the rewards than not (maybe not that likely in the beginning but definitely in the later stages). This has been supported by experiments in practical scenarios.</p>
+</section>
+<section id="is-average-the-best-no-pun-intended-possible-option-can-we-do-better" class="level3">
+<h3 class="anchored" data-anchor-id="is-average-the-best-no-pun-intended-possible-option-can-we-do-better">Is “average” the best (no pun intended!) possible option? Can we do better?</h3>
+<p>Yes. Let’s calculate the optimal value of the baseline by minimising the <span class="math inline">\(\text{New Var}\)</span>.</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-
-\mathcal{L}(\theta|\textbf{v}) &amp;= ln(p(\textbf{v}|\theta)) = ln \Big(\frac{1}{Z} \sum_\textbf{h} e^{-E(\textbf{v}, \textbf{h})} \Big)
+\text{New Var} &amp;= \text{Old Var} - 2bE_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] + b^2E_{\tau\sim p(\tau)} [g(\tau)^2]
 \\
-&amp;= ln \Big(\sum_\textbf{h} e^{-E(\textbf{v}, \textbf{h})} \Big) - ln(Z)
+\frac{d\text{ New Var}}{db} &amp;=  - 2E_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)] + 2bE_{\tau\sim p(\tau)} [g(\tau)^2] = 0
 \\
-&amp;= ln \Big(\sum_\textbf{h} e^{-E(\textbf{v}, \textbf{h})} \Big) - ln \Big(\sum_{\textbf{v}, \textbf{h}} e^{-E(\textbf{v}, \textbf{h})} \Big)
+b &amp;= \frac{E_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)]}{E_{\tau\sim p(\tau)} [g(\tau)^2]}
 \end{split}
 \end{equation*}\]</span></p>
-<p>Using the simple chain rule, we can calculate the gradient as follows:</p>
-<p><span class="math display">\[\begin{equation*}
-\begin{split}
-
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial \theta} &amp;= \frac{\partial}{\partial \theta} \Big( ln \Big(\sum_\textbf{h} e^{-E(\textbf{v},\textbf{h})} \Big) \Big) - \frac{\partial}{\partial \theta} \Big( ln \Big(\sum_{\textbf{v},\textbf{h}} e^{-E(\textbf{v},\textbf{h})} \Big) \Big)
-\\
-&amp;= - \frac{1}{\sum_\textbf{h} e^{-E(\textbf{v},\textbf{h})}} \sum_\textbf{h} e^{-E(\textbf{v},\textbf{h})} \frac{\partial E(\textbf{v},\textbf{h})}{\partial \theta} + \frac{1}{\sum_{\textbf{v},\textbf{h}} e^{-E(\textbf{v},\textbf{h})}} \sum_{\textbf{v},\textbf{h}} e^{-E(\textbf{\textbf{v},\textbf{h}})} \frac{\partial E(\textbf{v},\textbf{h})}{\partial \theta}
-\end{split}
-\end{equation*}\]</span></p>
-<p>Now, we already know that,</p>
-<p><span class="math display">\[
-p(\textbf{v},\textbf{h}) = \frac{e^{-E(\textbf{v},\textbf{h})}}{\sum_{\textbf{v},\textbf{h}} e^{-E(\textbf{v},\textbf{h})}}
-\]</span></p>
-<p><span class="math display">\[
-p(\textbf{h}|\textbf{v}) = \frac{p(\textbf{v},\textbf{h})}{p(\textbf{v})} = \frac{\frac{1}{Z} e^{-E(\textbf{v},\textbf{h})}}{\frac{1}{Z}  \sum_\textbf{h} e^{-E(\textbf{v},\textbf{h})}} = \frac{ e^{-E(\textbf{v},\textbf{h})}}{\sum_\textbf{h} e^{-E(\textbf{v},\textbf{h})}}
-\]</span></p>
-<p>Therefore, we can just put these in the gradient equation as follows:</p>
-<p><span class="math display">\[\begin{equation*}
-\begin{split}
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial \theta}
-
-&amp;= -  \sum_\textbf{h} p(\textbf{h}|\textbf{v}) \frac{\partial E(\textbf{v},\textbf{h})}{\partial \theta}
-+
-\sum_{\textbf{v},\textbf{h}} p(\textbf{v},\textbf{h}) \frac{\partial E(\textbf{v},\textbf{h})}{\partial \theta}
-\end{split}
-\end{equation*}\]</span></p>
-</section>
-<section id="gradient-calculation-for-w_ij" class="level1">
-<h1>Gradient Calculation for <span class="math inline">\(w_{ij}\)</span></h1>
-<p>Now, we will look at the simplification of the gradient of loss w.r.t the weights (i.e.&nbsp;<span class="math inline">\(\theta = w_{ij}\)</span>).</p>
-<section id="first-term-simplification" class="level2">
-<h2 class="anchored" data-anchor-id="first-term-simplification">First Term Simplification</h2>
-<p>Now, let’s calculate the first term of this gradient with <span class="math inline">\(\theta\)</span> as <span class="math inline">\(w_{ij}\)</span>:</p>
-<p><span class="math display">\[
--\sum_\textbf{h} p( \textbf{h | v} ) \frac{\partial E(\textbf{v}, \textbf{h})}{\partial w_{ij}}
-=
-\sum_\textbf{h} p( \textbf{h | v} ) h_i v_j
-\]</span></p>
-<p>Here, some calculation tricks can be applied to simplify the right-side expression:</p>
-<ol type="1">
-<li>Since, all <span class="math inline">\(h_i\)</span>’s are independent, we can write <span class="math inline">\(p( \textbf{h | v} ) = \prod_{k=1}^n p(h_k|\textbf{v})\)</span>.</li>
-<li><span class="math inline">\(\sum_h\)</span> can be rewritten as <span class="math inline">\(\sum_{h_i} \sum_{\textbf{h}_{\textbf{-i}}}\)</span>, where <span class="math inline">\(\textbf{h}_{\textbf{-i}}\)</span> represents a vector without the ith node.</li>
-<li>Lastly, we can rewrite <span class="math inline">\(\prod_{k=1}^n p(h_k|\textbf{v}) = p(h_i| \textbf{v}) p(\textbf{h}_{\textbf{-i}} | \textbf{v})\)</span>.</li>
-<li><span class="math inline">\(\sum_{\textbf{h}_{\textbf{-i}}}  p(\textbf{h}_{\textbf{-i}} | \textbf{v}) = 1\)</span>, obviously!</li>
-</ol>
-<p>Using the above tricks, the equation becomes:</p>
-<p><span class="math display">\[\begin{equation*}
-\begin{split}
-
--\sum_\textbf{h} p( \textbf{h | v} ) h_i v_j &amp;= \sum_{h_i} \sum_{\textbf{h}_{\textbf{-i}}} p(h_i| \textbf{v}) p(\textbf{h}_{\textbf{-i}} | \textbf{v}) h_i v_j
-\\
-&amp;= \sum_{h_i} p(h_i| \textbf{v}) h_i v_j \sum_{\textbf{h}_{\textbf{-i}}}  p(\textbf{h}_{\textbf{-i}} | \textbf{v})
-\\
-&amp;= \sum_{h_i} p(h_i| \textbf{v}) h_i v_j
-\\
-&amp;= p(H_i=0| \textbf{v}) (0) v_j + p(H_i=1| \textbf{v}) (1) v_j
-\\
-&amp;= p(H_i=1| \textbf{v}) v_j
-\\
-&amp;= \sigma \Big(\sum_{j=1}^m w_{ij}v_j + c_i \Big) v_j
-
-\end{split}
-\end{equation*}\]</span></p>
-</section>
-<section id="second-term-simplification" class="level2">
-<h2 class="anchored" data-anchor-id="second-term-simplification">Second Term Simplification</h2>
-<p><span class="math display">\[\begin{equation*}
-\begin{split}
-
-\sum_{\textbf{v},\textbf{h}} p(\textbf{v},\textbf{h}) \frac{\partial E(\textbf{v},\textbf{h})}{\partial w_{ij}}
-&amp;= -\sum_\textbf{v} p(\textbf{v})
-\sum_\textbf{h} p( \textbf{h | v} ) h_i v_j
-
-\\
-
-&amp;= -\sum_\textbf{v} p(\textbf{v})
-p(H_i=1| \textbf{v}) v_j
-\end{split}
-\end{equation*}\]</span></p>
-<p>Hence, the final gradient comes out to be:</p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial w_{ij}}
-=
-p(H_i=1| \textbf{v}) v_j
--
-\sum_\textbf{v} p(\textbf{v})
-p(H_i=1| \textbf{v}) v_j
-\]</span></p>
-</section>
-</section>
-<section id="final-gradient-calculation-formulas" class="level1">
-<h1>Final Gradient Calculation Formulas</h1>
-<p>Similar to what we did for <span class="math inline">\(w_{ij}\)</span>, we can calculate the gradient formulae for <span class="math inline">\(b_j\)</span> and <span class="math inline">\(c_i\)</span>. Hence, the final gradients formulae are:</p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial w_{ij}}
-=
-p(H_i=1| \textbf{v}) v_j
--
-\sum_\textbf{v} p(\textbf{v})
-p(H_i=1| \textbf{v}) v_j
-\]</span></p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial b_{j}} = v_j - \sum_\textbf{v} p(\textbf{v}) v_j
-\]</span></p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial b_{j}}
-=
-p(H_i=1| \textbf{v})
--
-\sum_\textbf{v} p(\textbf{v})
-p(H_i=1| \textbf{v})
-\]</span></p>
-</section>
-<section id="approximating-the-gradients" class="level1">
-<h1>Approximating the Gradients</h1>
-<p>There’s a big problem with the above equations. Looping over <span class="math inline">\(\textbf{v}\)</span> is intractable. However, we can estimate this expectation with a series of approximations.</p>
-<section id="approx.-1" class="level2">
-<h2 class="anchored" data-anchor-id="approx.-1">Approx. 1</h2>
-<p>Instead of looping over <span class="math inline">\(\textbf{v}\)</span>, we sample some samples from the distribution at hand [<span class="math inline">\(p(\textbf{v}, \textbf{h})\)</span> in this case] and calculate their mean. Practically, using just one sample works fine and fairly approximates the expectation.</p>
-<p><span class="math display">\[
-\hat{\textbf{v}} \sim p(\textbf{v}, \textbf{h})
-\]</span></p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial w_{ij}}
-=
-p(H_i=1| \textbf{v}) v_j
--
-p(H_i=1| \hat{\textbf{v}}) \hat{v}_j
-\]</span></p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial b_{j}} = v_j - \hat{v}_j
-\]</span></p>
-<p><span class="math display">\[
-\frac{\partial\mathcal{L}(\theta|\textbf{v})}{\partial b_{j}}
-=
-p(H_i=1| \textbf{v})
--
-p(H_i=1| \hat{\textbf{v}})
-\]</span></p>
-</section>
-<section id="approx.-2" class="level2">
-<h2 class="anchored" data-anchor-id="approx.-2">Approx. 2</h2>
-<p>Still, sampling <span class="math inline">\(\hat{\textbf{v}}\)</span> from <span class="math inline">\(p(\textbf{v}, \textbf{h})\)</span> is not possible because of the intractable <span class="math inline">\(Z\)</span> term encountered in the calculation of <span class="math inline">\(p(\textbf{v}, \textbf{h})\)</span>. However, the good news is that it is relatively (very!) easy to calculate <span class="math inline">\(p(\textbf{h} | \textbf{v})\)</span> and <span class="math inline">\(p(\textbf{v} | \textbf{h})\)</span> (remember the Bernoulli distributions we described a while ago?). Here’s where the Gibbs sampler comes in handy.</p>
-<p>Basically, according to Mr.&nbsp;Gibbs, if you start with some <span class="math inline">\(\textbf{v}^0\)</span> AND sample <span class="math inline">\(\textbf{h}^1 \sim p(\textbf{h} | \textbf{v}^0)\)</span> and <span class="math inline">\(\textbf{v}^1 \sim p(\textbf{v} | \textbf{h}^1)\)</span> AND keep going till convergence (suppose we reach convergence after <span class="math inline">\(k\)</span> iterations), the samples <span class="math inline">\(\textbf{h}^k\)</span> and <span class="math inline">\(\textbf{v}^k\)</span> will look as if they were sampled from the intractable joint distribution <span class="math inline">\(p(\textbf{v}, \textbf{h})\)</span>.</p>
-<p>We use Gibbs sampling because we can easily sample from <span class="math inline">\(p(\textbf{h}|\textbf{v})\)</span> and <span class="math inline">\(p(\textbf{v}|\textbf{h})\)</span> which are simple Bernoulli distributions.</p>
-</section>
-<section id="approx.-3" class="level2">
-<h2 class="anchored" data-anchor-id="approx.-3">Approx. 3</h2>
-<p>A small problem persists — performing Gibbs sampling until convergence is computationally expensive. However, the good news is that performing just one step of Gibbs sampling approximates the sampling process fairly enough for the gradient descent algorithm to work.</p>
-</section>
-</section>
-<section id="final-algorithm" class="level1">
-<h1>Final Algorithm</h1>
-<p>All the above approximations combine to form the “Contrastive Divergence” algorithm for calculating the gradients of an RBM, which is seen clearly as follows:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="kcd_algo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="kcd_algo.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></a></p>
-</figure>
-</div>
-<p>The above algorithm can be broken down as follows:</p>
-<ol type="1">
-<li>Initialise variables to store the gradient approximations. These will be used to update the parameters using gradient ascent.</li>
-<li>Iterate over the training set and:
-<ol type="a">
-<li>Get a good approximation of a sample from the joint distribution by performing k iterations of Gibbs sampling.</li>
-<li>Calculate the gradient of each parameter using the formulae we derived earlier.</li>
-<li>Use the gradient storage variables to accumulate gradients for each parameter by adding the calculated gradient.</li>
-<li>The final value of these gradient storage variables will be the final gradient approximation.</li>
-</ol></li>
-<li>(Not mentioned in the above photo) Using the gradient approximations outputted above, update the parameters using gradient ascent(we are maximising the <span class="math inline">\(\mathcal{L}(\theta|\textbf{v})\)</span>, hence ascent).</li>
-</ol>
-<p>With this, we have finally completed learning about binary RBMs. A lot of math, wasn’t it? I tried to make it as clear as possible, but if you have suggestions, feel free to contact me on shah.15@iitj.ac.in.</p>
-</section>
-<section id="references" class="level1">
-<h1>References</h1>
-<section id="rbms" class="level2">
-<h2 class="anchored" data-anchor-id="rbms">RBMs</h2>
-<ol type="1">
-<li><a href="https://www.researchgate.net/publication/243463621_An_Introduction_to_Restricted_Boltzmann_Machines">An Introduction to RBMs by Fischer and Igel</a></li>
-<li><a href="https://www.cs.toronto.edu/~hinton/absps/guideTR.pdf">Hinton’s “A Practical Guide to Training RBMs”</a></li>
-<li><a href="https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5">An introductory Medium blog</a></li>
-</ol>
-</section>
-<section id="gibbs" class="level2">
-<h2 class="anchored" data-anchor-id="gibbs">Gibbs</h2>
-<ol type="1">
-<li><a href="https://mr-easy.github.io/2020-05-21-implementing-gibbs-sampling-in-python/">A short intro to Gibbs sampling</a></li>
-<li><a href="https://jaketae.github.io/study/gibbs-sampling/">A detailed intro to Gibbs sampling</a></li>
-</ol>
+<p>So, so, so, the baseline depends on <span class="math inline">\(g(\tau)\)</span> which might make it slightly compute-intensive. So, using “average” as the baseline can be a efficient yet good option. Depends on the computational constraints of the problem.</p>
+<p>Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to&nbsp;shah.15@iitj.ac.in.</p>
 
 
+</section>
 </section>
 </section>
 
@@ -893,31 +841,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
-    }
-  });
-
-};
-          </script>
 
 
 
