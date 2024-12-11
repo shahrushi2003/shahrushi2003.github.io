@@ -119,6 +119,48 @@
     "text": "The Concept of Independence\nOnly a bit of common sense is required to understand that \\(A\\) and \\(B\\) are independent if: \\[P(A|B) = P(A)\\] Putting in the conditional probability formula, we get: \\[P(A \\cap B) = P(A) \\cdot P(B)\\]"
   },
   {
+    "objectID": "posts/kolmogorov_and_soph/index.html",
+    "href": "posts/kolmogorov_and_soph/index.html",
+    "title": "Kolmogorov Complexity and “Sophistication”",
+    "section": "",
+    "text": "It seems to me that the most important discovery since Gödel was the discovery by Chaitin, Solomonoff and Kolmogorov of the concept called Algorithmic Probability which is a fundamental new theory of how to make predictions given a collection of experiences and this is a beautiful theory, everybody should learn it, but it’s got one problem, that is, that you cannot actually calculate what this theory predicts because it is too hard, it requires an infinite amount of work. However, it should be possible to make practical approximations to the Chaitin, Kolmogorov, Solomonoff theory that would make better predictions than anything we have today. Everybody should learn all about that and spend the rest of their lives working on it.\n— Panel discussion on The Limits of Understanding, World Science Festival, NYC, Dec 14, 2014\nCredits: Wikipedia article on Minimum Description Length\n\nRecently, I read this great blog called “The First Law of Complexodynamics” by Scott Aaronson, which I found in Ilya Sutskever’s famous paper list. Even after reading it several times, I couldn’t get my dumb head around the definition of “sophistication”, which is an important part of that blog. I finally understood it, and it is quite cool. So, I decided to have a go at explaining it in my own words. Note that even though the writings that follow are self-sufficient and demand no prerequisites, I encourage you to have a go at Scott’s blog first and get a hold of the bigger picture."
+  },
+  {
+    "objectID": "posts/kolmogorov_and_soph/index.html#why-not-kc",
+    "href": "posts/kolmogorov_and_soph/index.html#why-not-kc",
+    "title": "Kolmogorov Complexity and “Sophistication”",
+    "section": "Why not KC?",
+    "text": "Why not KC?\nThe notion of Kolmogorov complexity is very helpful but it doesn’t quite fit into a particular interpretation of complexity which regards randomness as “not exactly complex”. A random string’s KC will be high even though it is not exactly complex, intuitively speaking. So, now we need a new measure which is low for simple strings as well as random strings but high for strings containing some inherent patterns."
+  },
+  {
+    "objectID": "posts/kolmogorov_and_soph/index.html#sophistication",
+    "href": "posts/kolmogorov_and_soph/index.html#sophistication",
+    "title": "Kolmogorov Complexity and “Sophistication”",
+    "section": "Sophistication",
+    "text": "Sophistication\nGiven a string \\(x\\), amongst all possible sets obeying the below conditions, the KC of the set which has the lowest KC is termed as the sophistication \\(Soph(x)\\).\n\n\\(x \\in S\\)\n\\(K(x|S) \\ge \\log_2(|S|) - c\\), for some constant \\(c \\ge 0\\). (In other words, one can distill all the “nonrandom” information in x just by saying that \\(x\\) belongs that \\(S\\).)\n\nIn mathematical terms,\n\\[\nS^* = \\arg\\min_{S} \\{ K(S) \\mid \\text{cond 1 and cond 2 holds} \\}\n\\\\\n\\text{Soph}(x) = K(S^*)\n\\]\nI know you’re like “woah wait, what the hell are these conditions, especially the second one?”. I had the same reaction but trust me, they’re quite cool!"
+  },
+  {
+    "objectID": "posts/kolmogorov_and_soph/index.html#explaining-condition-2",
+    "href": "posts/kolmogorov_and_soph/index.html#explaining-condition-2",
+    "title": "Kolmogorov Complexity and “Sophistication”",
+    "section": "Explaining Condition 2",
+    "text": "Explaining Condition 2\nThe first condition is trivial, but the second one is fairly difficult to digest. The main question I had was “how does the 2nd condition make \\(Soph(x)\\) low for both simple strings and random strings and high for strings containing patterns?”.\nLet’s tackle the “highly simple string” scenario first. In this case, the valid set having lowest KC i.e. \\(S^* = ​\\set{x}\\). Wait what? But is it even a valid set? Yes it is. It satisfies both conditions:\n\n\\(x \\in \\set x\\).\nSince \\(|\\set x| = 1\\), condition 2 trivially holds.\n\nMoreover, \\(K(\\set x) = K(x) = \\text{a very small value}\\), since the string \\(x\\) is very simple, making it the valid set having the lowest KC. Hence,\n\\[\nS^* = \\set{x}\n\\\\\n\\text{Soph}(x) = K(S^*) = \\text{a very small value}\n\\]\nLet’s move onto the “highly random string” case. First of all, can we use the singleton set \\(\\set{x}\\) as \\(S^*\\) again? We can see that it is a valid set, but does it have the least KC? Oops. Not anymore. That’s because the string \\(x\\) is highly random making it a high-KC string. That means \\(K(\\set{x})\\) is also very high. All in all, while it is a valid set, it is not the one with the lowest KC.\nBut what is \\(S^*\\) then? Here’s comes the cool part. Our problem is that \\(S = \\set{x}\\) has a very high KC. If \\(x\\) is a very random string, we can directly start with \\(S = \\set{0, 1}^n\\). Is it valid? Yes, it is.\n\n\\(x \\in \\set{0, 1}^n\\)\nFor this one, we first need to find out the values of all the terms:\n\n\\(K(x|S) \\approx K(x) = n\\)\n\\(\\log_2(|\\set{0, 1}^n|) = \\log_2(2^n) = n\\)\n\nFor \\(c \\ge 0\\), \\(n \\ge n - c\\) and condition 2 is also satisfied. Viola!\n\nTherefore, while \\(\\set{x}\\) is a valid set satisfying the conditions, it doesn’t give us the minimum value of \\(K(S)\\) that the sophistication definition asks for. The set of all n-bit strings gives us a much smaller \\(K(S)\\) while still satisfying the conditions."
+  },
+  {
+    "objectID": "posts/kolmogorov_and_soph/index.html#why-is-c-ge-0",
+    "href": "posts/kolmogorov_and_soph/index.html#why-is-c-ge-0",
+    "title": "Kolmogorov Complexity and “Sophistication”",
+    "section": "Why is \\(c \\ge 0\\)?",
+    "text": "Why is \\(c \\ge 0\\)?\nIf \\(c \\lt 0\\), the condition 2 becomes:\n\\[\nK(x|S) \\gt \\log_2(|S|)\n\\]\nFor any set \\(S\\) that contains \\(x\\), \\(K(x|S) \\le \\log_2(|S|)\\). I would leave this to the reader to think why. Hence, \\(c \\ge 0\\) to ensure that the condition is not too tight and impossible to satisfy."
+  },
+  {
+    "objectID": "posts/kolmogorov_and_soph/index.html#what-is-the-significance-of-c",
+    "href": "posts/kolmogorov_and_soph/index.html#what-is-the-significance-of-c",
+    "title": "Kolmogorov Complexity and “Sophistication”",
+    "section": "What is the significance of \\(c\\) ?",
+    "text": "What is the significance of \\(c\\) ?\nIt is used to control the tightness of the constraint. High c means that the constraint is more lenient. The value of \\(K(x|S)\\) can be low i.e. we might find a set \\(S\\) with a lower KC that captures more and more of \\(x\\) and help Ada make her program much shorter. On the other hand, if \\(c\\) is very low, the constraint is tighter. The valid sets will be the ones that contain less and less information of \\(x\\).\nIn summary,\n\nToo small c: forces us to use larger, more generic sets\nToo large c: allows us to use very specific sets, defeating the purpose of measuring sophistication"
+  },
+  {
     "objectID": "posts/restricted_boltzmann_machines/index.html",
     "href": "posts/restricted_boltzmann_machines/index.html",
     "title": "Bernoulli Restricted Boltzmann Machines",
@@ -179,6 +221,6 @@
     "href": "index.html",
     "title": "Rushi’s Furnace",
     "section": "",
-    "text": "Bernoulli Restricted Boltzmann Machines\n\n\n\n\n\n\n\n\n\n\n\nMay 18, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nAn Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\nRushi Shah\n\n\n\n\n\n\nNo matching items"
+    "text": "Kolmogorov Complexity and “Sophistication”\n\n\n\n\n\n\n\n\n\n\n\nNov 11, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nBernoulli Restricted Boltzmann Machines\n\n\n\n\n\n\n\n\n\n\n\nMay 18, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nAn Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\nRushi Shah\n\n\n\n\n\n\nNo matching items"
   }
 ]
