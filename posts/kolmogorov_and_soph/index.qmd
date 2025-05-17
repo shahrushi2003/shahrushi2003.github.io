@@ -1,0 +1,270 @@
+---
+title: "Kolmogorov Complexity and “Sophistication”"
+author: "Rushi Shah"
+date: "2024-12-11"
+image: "kc.png"
+include-in-header:
+  text: |
+    <style type="text/css">
+      h2, .h2 {
+        border-bottom: none;
+      }
+    </style>
+---
+
+# Introduction
+
+> It seems to me that the most important discovery since Gödel was the discovery by Chaitin, Solomonoff and Kolmogorov of the concept called Algorithmic Probability which is a fundamental new theory of how to make predictions given a collection of experiences and this is a beautiful theory, everybody should learn it, but it’s got one problem, that is, that you cannot actually calculate what this theory predicts because it is too hard, it requires an infinite amount of work. However, it should be possible to make practical approximations to the Chaitin, Kolmogorov, Solomonoff theory that would make better predictions than anything we have today. Everybody should learn all about that and spend the rest of their lives working on it.
+>
+> — Panel discussion on *The Limits of Understanding*, World Science Festival, NYC, Dec 14, 2014  
+> [Credits: Wikipedia article on Minimum Description Length](https://en.wikipedia.org/wiki/Minimum_description_length)
+
+
+Recently, I read this great blog called “[The First Law of Complexodynamics](https://scottaaronson.blog/?p=762)” by [Scott Aaronson](https://www.scottaaronson.com/), which I found in [Ilya Sutskever’s](https://en.wikipedia.org/wiki/Ilya_Sutskever) famous [paper list](https://aman.ai/primers/ai/top-30-papers/#the-first-law-of-complexodynamics). Even after reading it several times, I couldn’t get my dumb head around the definition of “sophistication”, which is an important part of that blog. I finally understood it, and it is quite cool. So, I decided to have a go at explaining it in my own words. Note that even though the writings that follow are self-sufficient and demand no prerequisites, I encourage you to have a go at Scott’s blog first and get a hold of the bigger picture.
+
+# Kolmogorov Complexity
+
+First of all, what do we mean by the Kolmogorov complexity of a string $x$? To put it simply, it refers to the “length of the shortest program which outputs $x$”. Let’s denote it by $K(x)$. To keep things simple, we consider the domain of binary strings. This means that $x$ is a binary string and the program is also a binary string, which, when plugged into a universal Turing machine, outputs another binary string. Now, our definition for $K(x)$ morphs into “length of the shortest binary string which makes a UTM output $x$”. Note that the program can written in any other language i.e. Python for example. In that case, the UTM is replaced by the Python interpreter. However, though trivial, it’s still worth mentioning that when comparing the complexities of two strings, the language should be the same for both of them. 
+
+Let’s take an example with Python as the language.
+
+1. $x_1 = (1)^{100}$
+    
+    ```python
+    for i in range(100):
+    	print("1")
+    ```
+    
+2. $x_2 = 10 \text{ random bits}$ i.e. $1001011010$
+    
+    ```python
+    print("1")
+    print("0")
+    print("0")
+    print("1")
+    print("0")
+    print("1")
+    print("1")
+    print("0")
+    print("1")
+    print("0")
+    ```
+    
+
+We can clearly say that $K(x_1) \lt K(x_2)$. 
+
+Also, you can clearly see that a lot of characters in the program is just typical syntax, which won’t change if you change the length of the string. These don’t matter when we are calculating the Kolmogorov complexity. 
+
+Taking the first example of $x_1 = (1)^{100}$, we can say that $K(x_1) = 2 + \text{constants}$. If we change the length to $10000$, $K(x_1) = 4 + \text{constants}$. In general, we can say that:
+
+$$
+K((1)^{n}) = \log_{10}(n) + \text{constants} = O(\log n) \text{ or } \log n
+$$
+
+Now, can you find the KC for random strings of length $n$? It will be $O(n)$ or $n$. 
+
+Another perspective to KC is viewing the optimal program as a search problem. You build a mechanism to check whether a given string is $x$ or not and use it for all possible strings through a for-loop. Taking the example of all-ones string again, the optimal program becomes:
+
+```python
+def binary(num, length):
+	# a silly helper to int-to-binary conversion with leading zeroes
+  return format(num, '#0{}b'.format(length + 2))[2:]
+
+for i in range(2**100): # iterate over all possible 100-bit strings
+	s = binary(i, length=100) 
+	all_ones = True
+	for j in range(100): # check if all bits are ones
+		all_ones = all_ones & bool(int(s[j]))
+	if all_ones:
+		print(s)
+		break
+```
+
+Well, this carelessly-written program looks much longer than the previous one. But you will be surprised when you calculate the complexity. 
+
+\begin{equation*}
+\begin{split}
+K((1)^{n}) &= \log_{10}(n) \text{ (for-loop)}
+\\
+&\quad+ \log_{10}(n) \text{ (binary conversion)}
+\\
+&\quad+ \log_{10}(n) \text{ (mechanism)}
+\\
+&\quad+ \text{constants}
+\\ 
+&= O(\log n) \text{ or } \log n
+\end{split}
+\end{equation*}
+
+It’s the same! Great, I hope you now know what Kolmogorov complexity really means.
+
+# Some Other Preliminaries
+
+Before understanding the definition of sophistication, we need to understand the following terms: 
+
+### KC of a set
+
+For a set $S$, $K(S)$ is defined as the “length of the shortest binary string which makes a UTM output all elements of the set $S$.” Easy, right?
+
+For example, let $S$ be the set of all possible binary strings of length $n$. The cardinality of this set will be $2^n$. The optimal program will be: 
+
+```python
+for i in range(2^n):
+	print(bin(i))
+```
+
+You can clearly see that $K(S) = O(\log n)$. 
+
+### KC of a string, provided it belongs to a set
+
+Imagine hiring Ada Lovelace to write these optimal programs. Would it help her make the optimal program shorter if she were to know everything about a set $S$ which already contains $x$? Probably yes, if she has an oracle for checking set membership in $S$. The length of this new program, written by Ada who knows that $x$ belongs to a given set $S$, is termed as $K(x|S)$.
+
+Let me explain it more clearly. Assume that Ada has an oracle for checking set membership in $S$. This oracle will help her simplify the “mechanism” part by reducing the search space significantly. For example, let’s take the $n$-bit string $x$ starting with 1 and other bits are random. We can clearly say that $K(x) = O(n-1) = O(n)$. 
+
+Now, let’s suppose Ada knows that $x$ belongs to a set $S$ which contains $x$ along with two other random strings that start with 0. Now, the optimal program will look something like:
+
+```python
+for i in range(2**n): # check over all possible n-bit strings
+	curr = binary(i, length=n)
+	if oracle(curr): # check if it belongs to S
+		if curr[0] == 1: # if first bit is 1, print!
+			print(curr)
+			break
+```
+
+Seeing the above program, we can say that:
+
+\begin{equation*}
+\begin{split}
+K(x|S) &= \log_{10}(n) \text{ (for-loop)}
+\\
+&\quad+ \log_{10}(n) \text{ (binary conversion)}
+\\
+&\quad+ 1 \text{ (mechanism)}
+\\
+&\quad+ \text{constants}
+\\ &= O(\log n)
+\end{split}
+\end{equation*}
+
+Great, now you also know the meaning of conditional Kolmogorov complexity.
+
+# Redefining Complexity
+
+## Why not KC?
+
+The notion of Kolmogorov complexity is very helpful but it doesn’t quite fit into a particular interpretation of complexity which regards randomness as “not exactly complex”. A random string’s KC will be high even though it is not exactly complex, intuitively speaking. So, now we need a new measure which is low for simple strings as well as random strings but high for strings containing some inherent patterns. 
+
+## Sophistication
+
+Given a string $x$, amongst all possible sets obeying the below conditions, the KC of the set which has the lowest KC is termed as the sophistication $Soph(x)$.
+
+1. $x \in S$
+2. $K(x|S) \ge \log_2(|S|) - c$, for some constant $c \ge 0$. (In other words, one can distill all the “nonrandom” information in x just by saying that $x$ belongs that $S$.)
+
+In mathematical terms,
+
+$$
+S^* = \arg\min_{S} \{ K(S) \mid \text{cond 1 and cond 2 holds} \}
+\\
+\text{Soph}(x) = K(S^*)
+$$
+
+I know you’re like “woah wait, what the hell are these conditions, especially the second one?”. I had the same reaction but trust me, they’re quite cool!
+
+## Explaining Condition 2
+
+The first condition is trivial, but the second one is fairly difficult to digest. The main question I had was “how does the 2nd condition make $Soph(x)$ low for both simple strings and random strings and high for strings containing patterns?”.
+
+Let’s tackle the “highly simple string” scenario first. In this case, the valid set having lowest KC i.e. $S^* = ​\set{x}$. Wait what? But is it even a valid set? Yes it is. It satisfies both conditions:
+
+1. $x \in \set x$.
+2. Since $|\set x| = 1$, condition 2 trivially holds.
+
+Moreover, $K(\set x) = K(x) = \text{a very small value}$, since the string $x$ is very simple, making it the valid set having the lowest KC. Hence,
+
+$$
+S^* = \set{x}
+\\
+\text{Soph}(x) = K(S^*) = \text{a very small value}
+$$
+
+Let’s move onto the “highly random string” case. First of all, can we use the singleton set $\set{x}$ as $S^*$ again? We can see that it is a valid set, but does it have the least KC? Oops. Not anymore. That’s because the string $x$ is highly random making it a high-KC string. That means $K(\set{x})$ is also very high. All in all, while it is a valid set, it is not the one with the lowest KC. 
+
+But what is $S^*$ then? Here’s comes the cool part. Our problem is that $S = \set{x}$ has a very high KC. If $x$ is a very random string, we can directly start with $S = \set{0, 1}^n$. Is it valid? Yes, it is.
+
+1. $x \in \set{0, 1}^n$
+2. For this one, we first need to find out the values of all the terms:
+    + $K(x|S) \approx K(x) = n$
+    + $\log_2(|\set{0, 1}^n|) = \log_2(2^n) = n$
+    
+    For $c \ge 0$, $n \ge n - c$ and condition 2 is also satisfied. Viola!
+
+Therefore, while $\set{x}$ is a valid set satisfying the conditions, it doesn't give us the minimum value of $K(S)$ that the sophistication definition asks for. The set of all n-bit strings gives us a much smaller $K(S)$ while still satisfying the conditions.
+
+## Why is $c \ge 0$?
+
+If $c \lt 0$, the condition 2 becomes: 
+
+$$
+K(x|S) \gt \log_2(|S|)
+$$
+
+For any set $S$ that contains $x$, $K(x|S) \le \log_2(|S|)$. I would leave this to the reader to think why. Hence, $c \ge 0$ to ensure that the condition is not too tight and impossible to satisfy. 
+
+## What is the significance of $c$ ?
+
+It is used to control the tightness of the constraint. High c means that the constraint is more lenient. The value of $K(x|S)$ can be low i.e. we might find a set $S$ with a lower KC that captures more and more of $x$ and help Ada make her program much shorter. On the other hand, if $c$ is very low, the constraint is tighter. The valid sets will be the ones that contain less and less information of $x$. 
+
+In summary,
+
+- **Too small c**: forces us to use larger, more generic sets
+- **Too large c**: allows us to use very specific sets, defeating the purpose of measuring sophistication
+
+# A Helpful Pseudocode
+
+For those who understand code better than math, here’s a minimal pseudocode snippet with a lot of comments to help you understand the concept of sophistication.
+
+```python
+import math
+
+n = 4
+U = set([str(bin(x)) for i in range(2**n)])
+POW = PowerSet(U)
+S = {"1010", "1111", "0001", "0101"}
+
+def Turing(prog):
+	# This is a universal Turing machine which runs the given binary program `prog`
+	# and returns its output `out`
+	return out
+
+def Lovelace(x, constraint=U):
+	# Ada Lovelace can write the shortest Turing program which outputs `x` when run on a Turing machine
+	# `constraint` set containing `x`: it can be used by Ada make her program shorter.
+	return prog
+
+def K(x):
+	# K(x) i.e. Kolmogorov complexity of a string or set
+	if type(x)==set:
+		comb_S = list(S).join()
+		return len(Lovelace(comb_S))
+	else:
+		return len(Lovelace(x))
+	
+def K_cond(x, S):
+	# K(x|S) i.e. conditional Kolmogorov complexity of a string given it belongs to a set
+	return len(Lovelace(x, constraint=S))
+	
+def Soph(x):
+	c = math.log(n, 2) # choosing c to be log(n)
+	sph = math.inf
+	for S in POW:
+		if (x in S) and (K_cond(x,S) >= math.log(x,2)-c) # is the set valid?
+			if (K(S)<=sph): # does it have the lowest KC?
+				sph = K(S)
+	return soph
+```
+
+# Conclusion
+
+I hope you understand the concept of Kolmogorov complexity and sophistication better. Thanks for reading. If you find any mistakes or inaccuracies, feel free to send an email to shah.15@iitj.ac.in.
