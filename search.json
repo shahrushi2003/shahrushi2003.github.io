@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "Yo, Rushi here! I am an undergrad at IIT Jodhpur doing research on topics related to “artificial learning”. I like to learn new things by helping others learn about them. I love explaining complex things in a simple manner and simple things with a complex perspective!\nAlso, e/acc ftw! Let’s ensure AGI takes over the world before politics and war do!"
+    "text": "Yo, Rushi here! I recently graduated from IIT Jodhpur. Most of my time is spent researching and developing artificial learning algorithms inspired by the incredible human brain. I like to learn new things by helping others learn about them. I love explaining complex ideas in a simple manner and simple concepts with a deeper perspective!\nAlso, e/acc ftw! Let’s make sure AGI takes over the world before politics and war do!"
   },
   {
     "objectID": "posts/probability_refresher/index.html",
@@ -144,7 +144,7 @@
     "href": "posts/kolmogorov_and_soph/index.html",
     "title": "Kolmogorov Complexity and “Sophistication”",
     "section": "",
-    "text": "It seems to me that the most important discovery since Gödel was the discovery by Chaitin, Solomonoff and Kolmogorov of the concept called Algorithmic Probability which is a fundamental new theory of how to make predictions given a collection of experiences and this is a beautiful theory, everybody should learn it, but it’s got one problem, that is, that you cannot actually calculate what this theory predicts because it is too hard, it requires an infinite amount of work. However, it should be possible to make practical approximations to the Chaitin, Kolmogorov, Solomonoff theory that would make better predictions than anything we have today. Everybody should learn all about that and spend the rest of their lives working on it.\n— Panel discussion on The Limits of Understanding, World Science Festival, NYC, Dec 14, 2014\nCredits: Wikipedia article on Minimum Description Length\n\nRecently, I read this great blog called “The First Law of Complexodynamics” by Scott Aaronson, which I found in Ilya Sutskever’s famous paper list. Even after reading it several times, I couldn’t get my dumb head around the definition of “sophistication”, which is an important part of that blog. I finally understood it, and it is quite cool. So, I decided to have a go at explaining it in my own words. Note that even though the writings that follow are self-sufficient and demand no prerequisites, I encourage you to have a go at Scott’s blog first and get a hold of the bigger picture."
+    "text": "It seems to me that the most important discovery since Gödel was the discovery by Chaitin, Solomonoff and Kolmogorov of the concept called Algorithmic Probability which is a fundamental new theory of how to make predictions given a collection of experiences and this is a beautiful theory, everybody should learn it, but it’s got one problem, that is, that you cannot actually calculate what this theory predicts because it is too hard, it requires an infinite amount of work. However, it should be possible to make practical approximations to the Chaitin, Kolmogorov, Solomonoff theory that would make better predictions than anything we have today. Everybody should learn all about that and spend the rest of their lives working on it.\n— Marvin Minsky in a panel discussion on The Limits of Understanding, World Science Festival, NYC, 2014\nCredits: Wikipedia article on Minimum Description Length\n\nRecently, I read this great blog called “The First Law of Complexodynamics” by Scott Aaronson, which I found in Ilya Sutskever’s famous paper list. Even after reading it several times, I couldn’t get my dumb head around the definition of “sophistication”, which is an important part of that blog. I finally understood it, and it is quite cool. So, I decided to have a go at explaining it in my own words. Note that even though the writings that follow are self-sufficient and demand no prerequisites, I encourage you to have a go at Scott’s blog first and get a hold of the bigger picture."
   },
   {
     "objectID": "posts/kolmogorov_and_soph/index.html#why-not-kc",
@@ -247,8 +247,8 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Rushi’s Furnace",
+    "title": "Rushi's Furnace",
     "section": "",
-    "text": "Kolmogorov Complexity and “Sophistication”\n\n\n\n\n\n\n\n\n\n\n\nDec 11, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nThe Policy Gradient\n\n\n\n\n\n\n\n\n\n\n\nDec 11, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nThe RL Ideology\n\n\n\n\n\n\n\n\n\n\n\nDec 11, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nBernoulli Restricted Boltzmann Machines\n\n\n\n\n\n\n\n\n\n\n\nMay 18, 2024\n\n\nRushi Shah\n\n\n\n\n\n\n\n\n\n\n\n\nAn Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\nRushi Shah\n\n\n\n\n\n\nNo matching items"
+    "text": "Kolmogorov Complexity and “Sophistication”\n\n\n\n\n\n\n\n\n\n\n\nDec 11, 2024\n\n\n10 min\n\n\n\n\n\n\n\n\n\n\n\n\nThe Policy Gradient\n\n\n\n\n\n\n\n\n\n\n\nDec 11, 2024\n\n\n9 min\n\n\n\n\n\n\n\n\n\n\n\n\nThe RL Ideology\n\n\n\n\n\n\n\n\n\n\n\nDec 11, 2024\n\n\n9 min\n\n\n\n\n\n\n\n\n\n\n\n\nBernoulli Restricted Boltzmann Machines\n\n\n\n\n\n\n\n\n\n\n\nMay 18, 2024\n\n\n9 min\n\n\n\n\n\n\n\n\n\n\n\n\nAn Expansive Probability Refresher\n\n\n\n\n\n\n\n\n\n\n\nMar 17, 2024\n\n\n11 min\n\n\n\n\n\n\nNo matching items"
   }
 ]

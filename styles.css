@@ -1,1 +1,5 @@
-/* css styles */
+html, body {
+  overscroll-behavior: none;
+  margin: 0;
+  padding: 0;
+}
