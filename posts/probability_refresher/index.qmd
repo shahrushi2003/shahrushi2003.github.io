@@ -2,7 +2,7 @@
 title: "An Expansive Probability Refresher"
 author: "Rushi Shah"
 date: "2024-03-17"
-image: "title_pic.jpg"
+image: "title.png"
 include-in-header:
   text: |
     <style type="text/css">
@@ -11,7 +11,7 @@ include-in-header:
       }
     </style>
 ---
-# **Motivation**
+# Motivation
 
 Many students study probability in high school or college but fail to grasp the common-sensical understanding of this natural topic. They usually end up memorising a ton of formulae and applying them to a hundred questions. I don’t know about them, but probability surely deserves better! I will explain everything in granular detail, providing informal, simple explanations alongside formal definitions of various terms and concepts. So, without further ado, let's start!
 

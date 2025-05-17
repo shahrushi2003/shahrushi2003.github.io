@@ -16,7 +16,7 @@ include-in-header:
 
 > It seems to me that the most important discovery since Gödel was the discovery by Chaitin, Solomonoff and Kolmogorov of the concept called Algorithmic Probability which is a fundamental new theory of how to make predictions given a collection of experiences and this is a beautiful theory, everybody should learn it, but it’s got one problem, that is, that you cannot actually calculate what this theory predicts because it is too hard, it requires an infinite amount of work. However, it should be possible to make practical approximations to the Chaitin, Kolmogorov, Solomonoff theory that would make better predictions than anything we have today. Everybody should learn all about that and spend the rest of their lives working on it.
 >
-> — Panel discussion on *The Limits of Understanding*, World Science Festival, NYC, Dec 14, 2014  
+> — Marvin Minsky in a panel discussion on *The Limits of Understanding*, World Science Festival, NYC, 2014  
 > [Credits: Wikipedia article on Minimum Description Length](https://en.wikipedia.org/wiki/Minimum_description_length)
 
 

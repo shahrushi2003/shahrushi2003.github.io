@@ -15,6 +15,6 @@ about:
 
 ---
 
-Yo, Rushi here! I am an undergrad at IIT Jodhpur doing research on topics related to “artificial learning”. I like to learn new things by helping others learn about them. I love explaining complex things in a simple manner and simple things with a complex perspective! 
+Yo, Rushi here! I recently graduated from IIT Jodhpur. Most of my time is spent researching and developing artificial learning algorithms inspired by the incredible human brain. I like to learn new things by helping others learn about them. I love explaining complex ideas in a simple manner and simple concepts with a deeper perspective! 
 
-Also, e/acc ftw! Let’s ensure AGI takes over the world before politics and war do!
+Also, e/acc ftw! Let’s make sure AGI takes over the world before politics and war do!

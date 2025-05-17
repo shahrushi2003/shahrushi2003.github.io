@@ -2,7 +2,7 @@
 title: "The RL Ideology"
 author: "Rushi Shah"
 date: "2024-12-11"
-image: "rl_title.png"
+image: "title.jpg"
 include-in-header:
   text: |
     <style type="text/css">

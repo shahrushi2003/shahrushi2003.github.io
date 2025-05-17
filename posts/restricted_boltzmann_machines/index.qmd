@@ -2,7 +2,7 @@
 title: "Bernoulli Restricted Boltzmann Machines"
 author: "Rushi Shah"
 date: "2024-05-18"
-image: "rbms.png"
+image: "title.png"
 include-in-header:
   text: |
     <style type="text/css">
@@ -31,12 +31,12 @@ $$
 
 The components of binary RBMs can be separated into:
 
-### **State**
+### State
 
 - **Visible Nodes** - These **binary** nodes are responsible for representing the data points in the input space. The use of these nodes will be clearer as we go deeper.
 - **Hidden Nodes** - These are **binary** nodes responsible for creating an information bottleneck to enforce proper learning of underlying features. They represent data points in the latent space.
 
-### **Learnable Parameters**
+### Learnable Parameters
 
 - **Visible Biases** - Each of the visible nodes has a bias parameter.
 - **Hidden Biases** - Each of the hidden nodes has a bias parameter.

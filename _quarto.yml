@@ -7,10 +7,14 @@ website:
       - about.qmd
       - icon: github
         href: https://github.com/shahrushi2003
-      - icon: twitter
+      - icon: twitter-x
         href: https://twitter.com/RushiShah1729
 format:
   html:
-    theme: darkly
+    theme:
+      dark: cyborg
+      light: flatly
+    smooth-scroll: true
     css: styles.css
     mainfont: "Gill Sans"
+    image-height: 150px
