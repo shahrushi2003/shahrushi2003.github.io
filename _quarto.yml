@@ -13,3 +13,4 @@ format:
   html:
     theme: darkly
     css: styles.css
+    mainfont: "Gill Sans"
