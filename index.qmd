@@ -8,7 +8,7 @@ listing:
   sort-ui: false
   filter-ui: false
   image-height: 200px
-  fields: [image, description, date, title, reading-time]
+  fields: [image, description, date, title]
 page-layout: full
 ---
 
