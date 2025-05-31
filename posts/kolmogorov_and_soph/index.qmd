@@ -267,4 +267,4 @@ def Soph(x):
 
 # Conclusion
 
-I hope you understand the concept of Kolmogorov complexity and sophistication better. Thanks for reading. If you find any mistakes or inaccuracies, feel free to send an email to shah.15@iitj.ac.in.
+I hope you understand the concept of Kolmogorov complexity and sophistication better. Thanks for reading. If you find any mistakes or inaccuracies, feel free to send an email to shahrushi2003@gmail.com.

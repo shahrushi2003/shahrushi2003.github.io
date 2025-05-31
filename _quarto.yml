@@ -14,6 +14,9 @@ format:
     theme:
       dark: cyborg
       light: flatly
+    toc: true
+    toc-title: Contents
+    toc-location: right
     smooth-scroll: true
     css: styles.css
     mainfont: "Gill Sans"

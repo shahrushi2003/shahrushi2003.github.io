@@ -235,4 +235,4 @@ $$P(A | B) = \frac {P(B|A) \cdot P(A)}{P(B)}$$
 
 Several concepts, ranging from the basic cross-entropy loss to an advanced architecture like the variational autoencoder, require a clear understanding of this beautiful branch of mathematics. Rest assured! Now, you are well-equipped in terms of probability-related concepts and ready to dive straight into the world of neural networks. I have tried my best to pour this knowledge into a clear, jargon-less language. I hope it helps!
 
-Thanks a lot for reading such a long blog. It took me a lot of hours to put it here, and I would appreciate your feedback. If you find a mistake, feel free to comment or send an email to [shah.15@iitj.ac.in](shah.15@iitj.ac.in). I will be posting new blogs related to deep learning in the upcoming days. Stay tuned!
+Thanks a lot for reading such a long blog. It took me a lot of hours to put it here, and I would appreciate your feedback. If you find a mistake, feel free to comment or send an email to [shahrushi2003@gmail.com](shahrushi2003@gmail.com). I will be posting new blogs related to deep learning in the upcoming days. Stay tuned!

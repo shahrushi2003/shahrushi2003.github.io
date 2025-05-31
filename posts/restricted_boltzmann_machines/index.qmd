@@ -320,7 +320,7 @@ The above algorithm can be broken down as follows:
     d. The final value of these gradient storage variables will be the final gradient approximation.
 3. (Not mentioned in the above photo) Using the gradient approximations outputted above, update the parameters using gradient ascent(we are maximising the $\mathcal{L}(\theta|\textbf{v})$, hence ascent).
 
-With this, we have finally completed learning about binary RBMs. A lot of math, wasn’t it? I tried to make it as clear as possible, but if you have suggestions, feel free to contact me on shah.15@iitj.ac.in.
+With this, we have finally completed learning about binary RBMs. A lot of math, wasn’t it? I tried to make it as clear as possible, but if you have suggestions, feel free to contact me on shahrushi2003@gmail.com.
 
 # References
 

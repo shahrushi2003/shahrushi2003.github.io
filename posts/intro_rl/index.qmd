@@ -134,6 +134,6 @@ Design a new policy $\pi_\theta'$ such that $\pi_\theta'(a^*|s)=1$, where $a^* =
 
 Design a new policy $\pi_\theta'$ such that $\pi_\theta'(\hat a|s)> \pi_\theta(\hat a|s) \text{ if } Q^{\pi_\theta}(s, a)>V^{\pi_\theta}(s)$. In other words, we can improve the policy by increasing the probability of selection of actions which were “above-average”.
 
-That’s all for now. We will go into improving the policy in the next blog. Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to shah.15@iitj.ac.in.
+That’s all for now. We will go into improving the policy in the next blog. Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to shahrushi2003@gmail.com.
 
 (Credits: Slides borrowed from the [amazing Deep RL course](https://www.youtube.com/playlist?list=PL_iWQOsE6TfVYGEGiAOMaOzzv41Jfm_Ps) by Sergey Levine)
