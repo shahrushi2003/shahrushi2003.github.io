@@ -110,7 +110,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -181,7 +181,31 @@ window.Quarto = {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#some-boring-notation" id="toc-some-boring-notation" class="nav-link active" data-scroll-target="#some-boring-notation">Some boring notation</a></li>
+  <li><a href="#some-interesting-math" id="toc-some-interesting-math" class="nav-link" data-scroll-target="#some-interesting-math">Some interesting math</a></li>
+  <li><a href="#evaluating-our-policy" id="toc-evaluating-our-policy" class="nav-link" data-scroll-target="#evaluating-our-policy">Evaluating our policy</a></li>
+  <li><a href="#calculating-the-gradient-of-jtheta" id="toc-calculating-the-gradient-of-jtheta" class="nav-link" data-scroll-target="#calculating-the-gradient-of-jtheta">Calculating the gradient of <span class="math inline">\(J(\theta)\)</span></a></li>
+  <li><a href="#reinforce" id="toc-reinforce" class="nav-link" data-scroll-target="#reinforce">REINFORCE</a></li>
+  <li><a href="#intuition-behind-reinforce" id="toc-intuition-behind-reinforce" class="nav-link" data-scroll-target="#intuition-behind-reinforce">Intuition behind REINFORCE</a></li>
+  <li><a href="#but-wait-whats-wrong-with-it" id="toc-but-wait-whats-wrong-with-it" class="nav-link" data-scroll-target="#but-wait-whats-wrong-with-it">But wait, what’s wrong with it?</a></li>
+  <li><a href="#tricks-to-reduce-variance" id="toc-tricks-to-reduce-variance" class="nav-link" data-scroll-target="#tricks-to-reduce-variance">Tricks to reduce variance</a>
+  <ul class="collapse">
+  <li><a href="#causality-assumption" id="toc-causality-assumption" class="nav-link" data-scroll-target="#causality-assumption">Causality Assumption</a></li>
+  <li><a href="#baseline-trick" id="toc-baseline-trick" class="nav-link" data-scroll-target="#baseline-trick">Baseline Trick</a>
+  <ul class="collapse">
+  <li><a href="#is-this-new-estimator-still-unbiased" id="toc-is-this-new-estimator-still-unbiased" class="nav-link" data-scroll-target="#is-this-new-estimator-still-unbiased">Is this new estimator still unbiased?</a></li>
+  <li><a href="#does-this-new-estimator-have-lower-variance" id="toc-does-this-new-estimator-have-lower-variance" class="nav-link" data-scroll-target="#does-this-new-estimator-have-lower-variance">Does this new estimator have lower variance?</a></li>
+  <li><a href="#is-average-the-best-no-pun-intended-possible-option-can-we-do-better" id="toc-is-average-the-best-no-pun-intended-possible-option-can-we-do-better" class="nav-link" data-scroll-target="#is-average-the-best-no-pun-intended-possible-option-can-we-do-better">Is “average” the best (no pun intended!) possible option? Can we do better?</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -427,7 +451,7 @@ b &amp;= \frac{E_{\tau\sim p(\tau)} [g(\tau)^2 r(\tau)]}{E_{\tau\sim p(\tau)} [g
 \end{split}
 \end{equation*}\]</span></p>
 <p>So, so, so, the baseline depends on <span class="math inline">\(g(\tau)\)</span> which might make it slightly compute-intensive. So, using “average” as the baseline can be a efficient yet good option. Depends on the computational constraints of the problem.</p>
-<p>Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to&nbsp;shah.15@iitj.ac.in.</p>
+<p>Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to&nbsp;shahrushi2003@gmail.com.</p>
 
 
 </section>

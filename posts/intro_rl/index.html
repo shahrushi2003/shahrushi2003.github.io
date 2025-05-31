@@ -110,7 +110,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -181,7 +181,32 @@ window.Quarto = {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#some-important-terminologies" id="toc-some-important-terminologies" class="nav-link active" data-scroll-target="#some-important-terminologies">Some Important Terminologies</a></li>
+  <li><a href="#behavioural-cloning" id="toc-behavioural-cloning" class="nav-link" data-scroll-target="#behavioural-cloning">Behavioural Cloning</a>
+  <ul class="collapse">
+  <li><a href="#does-it-work" id="toc-does-it-work" class="nav-link" data-scroll-target="#does-it-work">Does it work?</a></li>
+  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
+  </ul></li>
+  <li><a href="#why-need-rl-then-whats-the-goal-of-rl" id="toc-why-need-rl-then-whats-the-goal-of-rl" class="nav-link" data-scroll-target="#why-need-rl-then-whats-the-goal-of-rl">Why need RL then? What’s the goal of RL?</a></li>
+  <li><a href="#anatomy-of-an-rl-algorithm" id="toc-anatomy-of-an-rl-algorithm" class="nav-link" data-scroll-target="#anatomy-of-an-rl-algorithm">Anatomy of an RL Algorithm</a></li>
+  <li><a href="#evaluating-the-rl-policy" id="toc-evaluating-the-rl-policy" class="nav-link" data-scroll-target="#evaluating-the-rl-policy">Evaluating the RL policy</a>
+  <ul class="collapse">
+  <li><a href="#q-function---qpi_theta-s_t-a_t" id="toc-q-function---qpi_theta-s_t-a_t" class="nav-link" data-scroll-target="#q-function---qpi_theta-s_t-a_t">1. Q-Function - <span class="math inline">\(Q^{\pi_\theta} (s_t, a_t)\)</span></a></li>
+  <li><a href="#value-function---vpi_thetas_t" id="toc-value-function---vpi_thetas_t" class="nav-link" data-scroll-target="#value-function---vpi_thetas_t">2. Value Function - <span class="math inline">\(V^{\pi_\theta}(s_t)\)</span></a></li>
+  </ul></li>
+  <li><a href="#improving-the-policy-based-on-evaluation" id="toc-improving-the-policy-based-on-evaluation" class="nav-link" data-scroll-target="#improving-the-policy-based-on-evaluation">Improving the policy based on evaluation</a>
+  <ul class="collapse">
+  <li><a href="#idea-1-i-want-my-agent-to-always-take-the-best-action-more-exploitation" id="toc-idea-1-i-want-my-agent-to-always-take-the-best-action-more-exploitation" class="nav-link" data-scroll-target="#idea-1-i-want-my-agent-to-always-take-the-best-action-more-exploitation">Idea 1: “I want my agent to always take the “best” action!” (More exploitation)</a></li>
+  <li><a href="#idea-2-i-want-my-agent-to-select-one-out-of-some-above-average-actions-more-exploration" id="toc-idea-2-i-want-my-agent-to-select-one-out-of-some-above-average-actions-more-exploration" class="nav-link" data-scroll-target="#idea-2-i-want-my-agent-to-select-one-out-of-some-above-average-actions-more-exploration">Idea 2: “I want my agent to select one out of some above-average actions!” (More exploration!)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -297,7 +322,7 @@ E_{\tau \sim p_\theta(\tau)} \bigg[ \sum_t r(s_t, a_t) \bigg] = E_{s_1 \sim p(s_
 <section id="idea-2-i-want-my-agent-to-select-one-out-of-some-above-average-actions-more-exploration" class="level3">
 <h3 class="anchored" data-anchor-id="idea-2-i-want-my-agent-to-select-one-out-of-some-above-average-actions-more-exploration">Idea 2: “I want my agent to select one out of some above-average actions!” (More exploration!)</h3>
 <p>Design a new policy <span class="math inline">\(\pi_\theta'\)</span> such that <span class="math inline">\(\pi_\theta'(\hat a|s)&gt; \pi_\theta(\hat a|s) \text{ if } Q^{\pi_\theta}(s, a)&gt;V^{\pi_\theta}(s)\)</span>. In other words, we can improve the policy by increasing the probability of selection of actions which were “above-average”.</p>
-<p>That’s all for now. We will go into improving the policy in the next blog. Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to&nbsp;shah.15@iitj.ac.in.</p>
+<p>That’s all for now. We will go into improving the policy in the next blog. Thanks for reading! Hope you liked it. If you find any mistakes or inaccuracies, feel free to send an email to&nbsp;shahrushi2003@gmail.com.</p>
 <p>(Credits: Slides borrowed from the <a href="https://www.youtube.com/playlist?list=PL_iWQOsE6TfVYGEGiAOMaOzzv41Jfm_Ps">amazing Deep RL course</a> by Sergey Levine)</p>
 
 

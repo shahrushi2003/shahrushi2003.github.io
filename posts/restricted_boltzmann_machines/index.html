@@ -113,7 +113,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -184,7 +184,42 @@ window.Quarto = {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#what-is-generative-modelling" id="toc-what-is-generative-modelling" class="nav-link active" data-scroll-target="#what-is-generative-modelling">What is Generative Modelling?</a></li>
+  <li><a href="#the-concept-of-energy" id="toc-the-concept-of-energy" class="nav-link" data-scroll-target="#the-concept-of-energy">The Concept of Energy</a></li>
+  <li><a href="#architecture" id="toc-architecture" class="nav-link" data-scroll-target="#architecture">Architecture</a>
+  <ul class="collapse">
+  <li><a href="#state" id="toc-state" class="nav-link" data-scroll-target="#state">State</a></li>
+  <li><a href="#learnable-parameters" id="toc-learnable-parameters" class="nav-link" data-scroll-target="#learnable-parameters">Learnable Parameters</a></li>
+  </ul></li>
+  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">Notation</a></li>
+  <li><a href="#log-likelihood" id="toc-log-likelihood" class="nav-link" data-scroll-target="#log-likelihood">Log-Likelihood</a></li>
+  <li><a href="#gradient-calculation-logic" id="toc-gradient-calculation-logic" class="nav-link" data-scroll-target="#gradient-calculation-logic">Gradient Calculation Logic</a></li>
+  <li><a href="#gradient-calculation-for-w_ij" id="toc-gradient-calculation-for-w_ij" class="nav-link" data-scroll-target="#gradient-calculation-for-w_ij">Gradient Calculation for <span class="math inline">\(w_{ij}\)</span></a>
+  <ul class="collapse">
+  <li><a href="#first-term-simplification" id="toc-first-term-simplification" class="nav-link" data-scroll-target="#first-term-simplification">First Term Simplification</a></li>
+  <li><a href="#second-term-simplification" id="toc-second-term-simplification" class="nav-link" data-scroll-target="#second-term-simplification">Second Term Simplification</a></li>
+  </ul></li>
+  <li><a href="#final-gradient-calculation-formulas" id="toc-final-gradient-calculation-formulas" class="nav-link" data-scroll-target="#final-gradient-calculation-formulas">Final Gradient Calculation Formulas</a></li>
+  <li><a href="#approximating-the-gradients" id="toc-approximating-the-gradients" class="nav-link" data-scroll-target="#approximating-the-gradients">Approximating the Gradients</a>
+  <ul class="collapse">
+  <li><a href="#approx.-1" id="toc-approx.-1" class="nav-link" data-scroll-target="#approx.-1">Approx. 1</a></li>
+  <li><a href="#approx.-2" id="toc-approx.-2" class="nav-link" data-scroll-target="#approx.-2">Approx. 2</a></li>
+  <li><a href="#approx.-3" id="toc-approx.-3" class="nav-link" data-scroll-target="#approx.-3">Approx. 3</a></li>
+  </ul></li>
+  <li><a href="#final-algorithm" id="toc-final-algorithm" class="nav-link" data-scroll-target="#final-algorithm">Final Algorithm</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a>
+  <ul class="collapse">
+  <li><a href="#rbms" id="toc-rbms" class="nav-link" data-scroll-target="#rbms">RBMs</a></li>
+  <li><a href="#gibbs" id="toc-gibbs" class="nav-link" data-scroll-target="#gibbs">Gibbs</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -463,7 +498,7 @@ p(H_i=1| \hat{\textbf{v}})
 </ol></li>
 <li>(Not mentioned in the above photo) Using the gradient approximations outputted above, update the parameters using gradient ascent(we are maximising the <span class="math inline">\(\mathcal{L}(\theta|\textbf{v})\)</span>, hence ascent).</li>
 </ol>
-<p>With this, we have finally completed learning about binary RBMs. A lot of math, wasn’t it? I tried to make it as clear as possible, but if you have suggestions, feel free to contact me on shah.15@iitj.ac.in.</p>
+<p>With this, we have finally completed learning about binary RBMs. A lot of math, wasn’t it? I tried to make it as clear as possible, but if you have suggestions, feel free to contact me on shahrushi2003@gmail.com.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
@@ -1041,7 +1076,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","closeEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

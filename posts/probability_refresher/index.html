@@ -113,7 +113,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -184,7 +184,56 @@ window.Quarto = {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#the-informal-intro" id="toc-the-informal-intro" class="nav-link" data-scroll-target="#the-informal-intro">The Informal Intro</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-random-variable" id="toc-what-is-a-random-variable" class="nav-link" data-scroll-target="#what-is-a-random-variable">What is a random variable?</a></li>
+  <li><a href="#what-exactly-is-probability" id="toc-what-exactly-is-probability" class="nav-link" data-scroll-target="#what-exactly-is-probability">What exactly is probability?</a>
+  <ul class="collapse">
+  <li><a href="#the-eq-problem" id="toc-the-eq-problem" class="nav-link" data-scroll-target="#the-eq-problem">The EQ Problem!</a></li>
+  <li><a href="#the-infinity-problem" id="toc-the-infinity-problem" class="nav-link" data-scroll-target="#the-infinity-problem">The Infinity Problem</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#the-functions" id="toc-the-functions" class="nav-link" data-scroll-target="#the-functions">The Functions</a>
+  <ul class="collapse">
+  <li><a href="#cdf" id="toc-cdf" class="nav-link" data-scroll-target="#cdf">CDF</a></li>
+  <li><a href="#pmf" id="toc-pmf" class="nav-link" data-scroll-target="#pmf">PMF</a></li>
+  <li><a href="#pdf" id="toc-pdf" class="nav-link" data-scroll-target="#pdf">PDF</a></li>
+  </ul></li>
+  <li><a href="#the-properties" id="toc-the-properties" class="nav-link" data-scroll-target="#the-properties">The Properties</a>
+  <ul class="collapse">
+  <li><a href="#expectation" id="toc-expectation" class="nav-link" data-scroll-target="#expectation">Expectation</a></li>
+  <li><a href="#variance" id="toc-variance" class="nav-link" data-scroll-target="#variance">Variance</a></li>
+  </ul></li>
+  <li><a href="#some-common-probability-distributions" id="toc-some-common-probability-distributions" class="nav-link" data-scroll-target="#some-common-probability-distributions">Some Common Probability Distributions</a>
+  <ul class="collapse">
+  <li><a href="#the-discrete-distros" id="toc-the-discrete-distros" class="nav-link" data-scroll-target="#the-discrete-distros">The Discrete Distros</a></li>
+  <li><a href="#the-continuous-distros" id="toc-the-continuous-distros" class="nav-link" data-scroll-target="#the-continuous-distros">The Continuous Distros</a></li>
+  </ul></li>
+  <li><a href="#working-with-multiple-variables" id="toc-working-with-multiple-variables" class="nav-link" data-scroll-target="#working-with-multiple-variables">Working with multiple variables</a>
+  <ul class="collapse">
+  <li><a href="#joint-cdf-and-marginal-cdf" id="toc-joint-cdf-and-marginal-cdf" class="nav-link" data-scroll-target="#joint-cdf-and-marginal-cdf">Joint CDF and Marginal CDF</a></li>
+  <li><a href="#joint-pmf-and-marginal-pmf" id="toc-joint-pmf-and-marginal-pmf" class="nav-link" data-scroll-target="#joint-pmf-and-marginal-pmf">Joint PMF and Marginal PMF</a></li>
+  <li><a href="#joint-pdf-and-marginal-pdf" id="toc-joint-pdf-and-marginal-pdf" class="nav-link" data-scroll-target="#joint-pdf-and-marginal-pdf">Joint PDF and Marginal PDF</a></li>
+  <li><a href="#expectation-and-covariance" id="toc-expectation-and-covariance" class="nav-link" data-scroll-target="#expectation-and-covariance">Expectation and Covariance</a></li>
+  <li><a href="#conditional-probability" id="toc-conditional-probability" class="nav-link" data-scroll-target="#conditional-probability">Conditional Probability</a></li>
+  <li><a href="#the-concept-of-independence" id="toc-the-concept-of-independence" class="nav-link" data-scroll-target="#the-concept-of-independence">The Concept of Independence</a></li>
+  </ul></li>
+  <li><a href="#the-laws-and-rules" id="toc-the-laws-and-rules" class="nav-link" data-scroll-target="#the-laws-and-rules">The Laws and Rules</a>
+  <ul class="collapse">
+  <li><a href="#law-of-total-probability" id="toc-law-of-total-probability" class="nav-link" data-scroll-target="#law-of-total-probability">Law of Total Probability</a></li>
+  <li><a href="#chain-rule" id="toc-chain-rule" class="nav-link" data-scroll-target="#chain-rule">Chain Rule</a></li>
+  <li><a href="#bayes-rule" id="toc-bayes-rule" class="nav-link" data-scroll-target="#bayes-rule">Bayes’ Rule</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -388,7 +437,7 @@ window.Quarto = {
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
 <p>Several concepts, ranging from the basic cross-entropy loss to an advanced architecture like the variational autoencoder, require a clear understanding of this beautiful branch of mathematics. Rest assured! Now, you are well-equipped in terms of probability-related concepts and ready to dive straight into the world of neural networks. I have tried my best to pour this knowledge into a clear, jargon-less language. I hope it helps!</p>
-<p>Thanks a lot for reading such a long blog. It took me a lot of hours to put it here, and I would appreciate your feedback. If you find a mistake, feel free to comment or send an email to <a href="shah.15@iitj.ac.in">shah.15@iitj.ac.in</a>. I will be posting new blogs related to deep learning in the upcoming days. Stay tuned!</p>
+<p>Thanks a lot for reading such a long blog. It took me a lot of hours to put it here, and I would appreciate your feedback. If you find a mistake, feel free to comment or send an email to <a href="shahrushi2003@gmail.com">shahrushi2003@gmail.com</a>. I will be posting new blogs related to deep learning in the upcoming days. Stay tuned!</p>
 
 
 </section>
@@ -948,7 +997,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false,"closeEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
